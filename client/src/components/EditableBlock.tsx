@@ -1,4 +1,7 @@
+import styled from 'styled-components';
 import { Block, HeaderBlock, ImageBlock, ListBlock, ParagraphBlock } from '../constants';
+import { HolderOutlined, PlusOutlined } from '@ant-design/icons';
+import { FlexRow } from '../styles/themes';
 
 export interface EditableBlockProps {
   block: Block;
@@ -69,5 +72,21 @@ export default function EditableBlock({ block, index, handleInput }: EditableBlo
     image: <ImageTag block={block as ImageBlock} index={index} handleInput={handleInput} />,
   };
 
-  return blockTag[block.type];
+  return (
+    <BlockWrapper>
+      <Icons>
+        <HolderOutlined />
+        <PlusOutlined />
+      </Icons>
+      {blockTag[block.type]}
+    </BlockWrapper>
+  );
 }
+
+const BlockWrapper = styled(FlexRow)`
+  justify-content: flex-start;
+`;
+
+const Icons = styled(FlexRow)`
+  margin-right: 10px;
+`;
