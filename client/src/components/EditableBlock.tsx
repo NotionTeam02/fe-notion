@@ -7,6 +7,7 @@ export interface EditableBlockProps {
   block: Block;
   index: number;
   handleInput: (e: React.KeyboardEvent<HTMLElement>, index: number, itemIndex?: number) => void;
+  showPopup?: () => void;
 }
 
 const stopEnterDefaultEvent = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -28,7 +29,7 @@ const HeaderTag = ({ block, index, handleInput }: EditableBlockProps & { block: 
 };
 
 const ParagraphTag = ({ block, index, handleInput }: EditableBlockProps & { block: ParagraphBlock }) => (
-  <p
+  <div
     contentEditable
     suppressContentEditableWarning
     onKeyUp={(e) => handleInput(e, index)}
@@ -36,7 +37,7 @@ const ParagraphTag = ({ block, index, handleInput }: EditableBlockProps & { bloc
     style={{ backgroundColor: 'aliceblue' }}
   >
     {block.content}
-  </p>
+  </div>
 );
 
 const ListTag = ({ block, index, handleInput }: EditableBlockProps & { block: ListBlock }) => (
@@ -64,7 +65,7 @@ const ImageTag = ({ block, index, handleInput }: EditableBlockProps & { block: I
   </div>
 );
 
-export default function EditableBlock({ block, index, handleInput }: EditableBlockProps) {
+export default function EditableBlock({ block, index, handleInput, showPopup }: EditableBlockProps) {
   const blockTag = {
     header: <HeaderTag block={block as HeaderBlock} index={index} handleInput={handleInput} />,
     paragraph: <ParagraphTag block={block as ParagraphBlock} index={index} handleInput={handleInput} />,
@@ -75,8 +76,12 @@ export default function EditableBlock({ block, index, handleInput }: EditableBlo
   return (
     <BlockWrapper>
       <Icons>
-        <HolderOutlined />
-        <PlusOutlined />
+        <IconWrapper>
+          <HolderOutlined onClick={showPopup} />
+        </IconWrapper>
+        <IconWrapper>
+          <PlusOutlined onClick={showPopup} />
+        </IconWrapper>
       </Icons>
       {blockTag[block.type]}
     </BlockWrapper>
@@ -89,4 +94,14 @@ const BlockWrapper = styled(FlexRow)`
 
 const Icons = styled(FlexRow)`
   margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  transition: all;
+`;
+const IconWrapper = styled.div`
+  opacity: 0;
+  transition: opacity 0.3s;
+  ${Icons}:hover & {
+    opacity: 1;
+  }
 `;
