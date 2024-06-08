@@ -14,13 +14,15 @@ import { ColumnGap, Flex, FlexRow } from '../styles/themes';
 export interface EditableBlockProps {
   block: Block;
   index: number;
-  handleInput: (e: React.KeyboardEvent<HTMLElement>, index: number) => void;
+  handleInput: (e: React.KeyboardEvent<HTMLElement>, index: number, itemIndex?: number) => void;
   showPopup?: () => void;
 }
 
 export interface OrderedItemTagProps {
   item: OrderedItemBlock;
   itemIndex: number;
+  index: number;
+  handleInput: (e: React.KeyboardEvent<HTMLElement>, index: number, itemIndex?: number) => void;
 }
 
 const stopEnterDefaultEvent = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -104,20 +106,14 @@ const UnorderedItemTag = ({
 const OrderedListTag = ({ block: { items }, index, handleInput }: EditableBlockProps & { block: OrderedListBlock }) => (
   <ColumnGap>
     {items.map((item: OrderedItemBlock, itemIndex: number) => (
-      <div
-        key={`ol-${index}-${itemIndex}`}
-        contentEditable
-        suppressContentEditableWarning
-        onKeyUp={(e) => handleInput(e, index)}
-        onKeyDown={(e) => stopEnterDefaultEvent(e)}
-      >
-        <OrderedItemTag item={item} itemIndex={itemIndex} />
+      <div>
+        <OrderedItemTag item={item} itemIndex={itemIndex} index={index} handleInput={handleInput} />
       </div>
     ))}
   </ColumnGap>
 );
 
-const OrderedItemTag = ({ item, itemIndex }: OrderedItemTagProps) => {
+const OrderedItemTag = ({ item, itemIndex, index, handleInput }: OrderedItemTagProps) => {
   return (
     <BlockWrapper>
       <Icons>
@@ -130,7 +126,15 @@ const OrderedItemTag = ({ item, itemIndex }: OrderedItemTagProps) => {
       </Icons>
       <Flex>
         <OrderedListIndex>{`${itemIndex + 1}.`}</OrderedListIndex>
-        <div>{item.content}</div>
+        <div
+          key={`ol-${index}-${itemIndex}`}
+          contentEditable
+          suppressContentEditableWarning
+          onKeyUp={(e) => handleInput(e, index, itemIndex)}
+          onKeyDown={(e) => stopEnterDefaultEvent(e)}
+        >
+          {item.content}
+        </div>
       </Flex>
     </BlockWrapper>
   );
