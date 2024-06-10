@@ -90,6 +90,13 @@ export default function useBlockController({
       setBlocks(newBlocks);
       handleFetch(newBlocks);
 
+      if (setCursorPosition) {
+        setCursorPosition({
+          ...cursorPosition,
+          offset: cursorPosition.offset + 1,
+        });
+      }
+
       return;
     }
 
