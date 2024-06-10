@@ -1,5 +1,24 @@
-import { KeyboardEvent } from 'react';
 import { Block, BlockControllerProps, ParagraphBlock } from '../constants';
+import { HandleInputProps } from '../components/EditableBlock';
+
+interface CursorPosition {
+  node: Node | null;
+  offset: number;
+  blockOffset: number;
+}
+
+const insertLineBreak = (blocks: Block[], blockIndex: number): Block[] => {
+  const block = blocks[blockIndex];
+
+  if (block.type === 'paragraph') {
+    const previousArr = blocks.slice(0, blockIndex);
+    const nextArr = blocks.slice(blockIndex + 1);
+    const lineBreakContent = block.content + '\n';
+    const array = [...previousArr, { type: 'paragraph', content: lineBreakContent } as ParagraphBlock, ...nextArr];
+    return array;
+  }
+  return [];
+};
 
 const addNewBlock = (blocks: Block[], blockIndex: number) => {
   const previousArr = blocks.slice(0, blockIndex + 1);
@@ -30,18 +49,47 @@ export default function useBlockController({
   handleFetch,
   handleContentChange,
 }: BlockControllerProps) {
-  const handleInput = (
-    { key, currentTarget: { textContent } }: KeyboardEvent<HTMLElement>,
-    blockIndex: number,
-    itemIndex?: number
-  ) => {
+  const handleInput = ({
+    e: {
+      key,
+      shiftKey,
+      currentTarget: { textContent },
+    },
+    index: blockIndex,
+    itemIndex,
+    setCursorPosition,
+  }: HandleInputProps) => {
     let newBlocks = [...blocks];
     const block = newBlocks[blockIndex];
+
+    //1. 현재 커서의 위치 저장
+    const selection = window.getSelection();
+    const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+    const cursorPosition: CursorPosition = {
+      node: null,
+      offset: 0,
+      blockOffset: 0,
+    };
+
+    if (range && setCursorPosition) {
+      cursorPosition.node = range.startContainer;
+      cursorPosition.offset = range.startOffset;
+      cursorPosition.blockOffset = blockIndex;
+      setCursorPosition(cursorPosition);
+    }
 
     if (key === 'Backspace' && isBlankBlock(block)) {
       newBlocks = removeBlock(blocks, blockIndex);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
+      return;
+    }
+
+    if (key === 'Enter' && shiftKey) {
+      newBlocks = insertLineBreak(blocks, blockIndex);
+      setBlocks(newBlocks);
+      handleFetch(newBlocks);
+
       return;
     }
 
