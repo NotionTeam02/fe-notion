@@ -37,6 +37,9 @@ export default function Sidebar({ teamspace, users }: SidebarProps) {
 const Wrapper = styled(ColumnGap)`
   ${DefaultFontSize}
 
+  position: fixed;
+  top: 0;
+  left: 0;
   box-sizing: border-box;
   padding: 16px 8px;
   width: 240px;
