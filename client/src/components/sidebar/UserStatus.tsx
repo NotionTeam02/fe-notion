@@ -15,5 +15,5 @@ const StatusIndicator = styled.div<{ isActive: boolean }>`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: ${({ isActive }) => (isActive ? 'green' : 'gray')};
+  background-color: ${({ isActive }) => (isActive ? '#66BF3C' : '#A0A3BD')};
 `;
