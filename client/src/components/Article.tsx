@@ -23,7 +23,8 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
+  transition: all 0.5s ease-out;
 `;
 
 const ContentBox = styled.div`
