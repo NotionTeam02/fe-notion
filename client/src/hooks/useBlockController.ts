@@ -7,13 +7,17 @@ export interface CursorPosition {
   blockOffset: number;
 }
 
-const insertLineBreak = (blocks: Block[], blockIndex: number): Block[] => {
+const insertLineBreak = (blocks: Block[], blockIndex: number, offset: number): Block[] => {
   const block = blocks[blockIndex];
-
   if (block.type === 'paragraph') {
     const previousArr = blocks.slice(0, blockIndex);
     const nextArr = blocks.slice(blockIndex + 1);
-    const lineBreakContent = block.content + '\n\n';
+
+    const prevContent = block.content.slice(0, offset);
+    const nextContent = block.content.slice(offset);
+    const breakLine = nextContent ? '\n' : '\n\n';
+    const lineBreakContent = `${prevContent}${breakLine}${nextContent}`;
+
     const array = [...previousArr, { type: 'paragraph', content: lineBreakContent } as ParagraphBlock, ...nextArr];
     return array;
   }
@@ -89,7 +93,7 @@ export default function useBlockController({
     if (key === 'Enter' && shiftKey) {
       if (updateCursorPosition)
         updateCursorPosition({ ...cursorPosition, offset: range?.startOffset ? range?.startOffset + 1 : 0 });
-      newBlocks = insertLineBreak(blocks, blockIndex);
+      newBlocks = insertLineBreak(blocks, blockIndex, cursorPosition.offset);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
 
