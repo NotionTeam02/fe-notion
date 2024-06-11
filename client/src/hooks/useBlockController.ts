@@ -13,7 +13,7 @@ const insertLineBreak = (blocks: Block[], blockIndex: number): Block[] => {
   if (block.type === 'paragraph') {
     const previousArr = blocks.slice(0, blockIndex);
     const nextArr = blocks.slice(blockIndex + 1);
-    const lineBreakContent = block.content + '\n';
+    const lineBreakContent = block.content + '\n\n';
     const array = [...previousArr, { type: 'paragraph', content: lineBreakContent } as ParagraphBlock, ...nextArr];
     return array;
   }
@@ -89,7 +89,6 @@ export default function useBlockController({
     if (key === 'Enter' && shiftKey) {
       if (updateCursorPosition)
         updateCursorPosition({ ...cursorPosition, offset: range?.startOffset ? range?.startOffset + 1 : 0 });
-
       newBlocks = insertLineBreak(blocks, blockIndex);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
