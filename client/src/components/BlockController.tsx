@@ -1,18 +1,23 @@
 import { BlockControllerProps } from '../constants';
 import EditableBlock from './EditableBlock';
-import useBlockController from '../hooks/useBlockController';
+import useBlockController, { CursorPosition } from '../hooks/useBlockController';
 import { ColumnGap } from '../styles/themes';
-import { useState } from 'react';
+import { useRef } from 'react';
 
 export default function BlockController(props: BlockControllerProps) {
   const { blocks } = props;
   const { handleInput } = useBlockController(props);
   const showPopup = () => {};
-  const [cursorPosition, setCursorPosition] = useState<{ node: Node | null; offset: number; blockOffset: number }>({
+
+  const cursorPositionRef = useRef<{ node: Node | null; offset: number; blockOffset: number }>({
     node: null,
     offset: 0,
     blockOffset: 0,
   });
+
+  const updateCursorPosition = (positionObj: CursorPosition) => {
+    cursorPositionRef.current = positionObj;
+  };
 
   return (
     <ColumnGap>
@@ -23,9 +28,9 @@ export default function BlockController(props: BlockControllerProps) {
             index={index}
             handleInput={handleInput}
             showPopup={showPopup}
-            cursorPosition={cursorPosition}
-            setCursorPosition={setCursorPosition}
-            isFocusedBlock={index === cursorPosition.blockOffset}
+            cursorPositionRef={cursorPositionRef}
+            updateCursorPosition={updateCursorPosition}
+            isFocusedBlock={index === cursorPositionRef.current.blockOffset}
           />
         </div>
       ))}

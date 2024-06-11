@@ -11,12 +11,15 @@ import {
 import { HolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { ColumnGap, Flex, FlexRow } from '../styles/themes';
 import React, { useEffect } from 'react';
+import { CursorPosition } from '../hooks/useBlockController';
+import { specifyPositionOfCursor } from '../helpers/specifyPositionOfCursor';
 
 export interface HandleInputProps {
   e: React.KeyboardEvent<HTMLElement>;
   index: number;
   itemIndex?: number;
-  setCursorPosition?: React.Dispatch<React.SetStateAction<{ node: Node | null; offset: number; blockOffset: number }>>;
+  cursorPositionRef?: React.RefObject<{ node: Node | null; offset: number; blockOffset: number }>;
+  updateCursorPosition?: (positionObj: CursorPosition) => void;
 }
 
 export interface EditableBlockProps {
@@ -24,8 +27,8 @@ export interface EditableBlockProps {
   index: number;
   handleInput: (props: HandleInputProps) => void;
   showPopup?: () => void;
-  cursorPosition: { node: Node | null; offset: number; blockOffset: number };
-  setCursorPosition: React.Dispatch<React.SetStateAction<{ node: Node | null; offset: number; blockOffset: number }>>;
+  cursorPositionRef: React.RefObject<{ node: Node | null; offset: number; blockOffset: number }>;
+  updateCursorPosition: (positionObj: CursorPosition) => void;
   isFocusedBlock: boolean;
 }
 
@@ -34,19 +37,13 @@ export interface OrderedItemTagProps {
   itemIndex: number;
   index: number;
   handleInput: (props: HandleInputProps) => void;
-  setCursorPosition: React.Dispatch<React.SetStateAction<{ node: Node | null; offset: number; blockOffset: number }>>;
 }
 
 const stopEnterDefaultEvent = (e: React.KeyboardEvent<HTMLElement>) => {
   if (e.key === 'Enter') e.preventDefault();
 };
 
-const HeaderTag = ({
-  block: { level, content },
-  index,
-  handleInput,
-  setCursorPosition,
-}: EditableBlockProps & { block: HeaderBlock }) => {
+const HeaderTag = ({ block: { level, content }, index, handleInput }: EditableBlockProps & { block: HeaderBlock }) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   return (
     <BlockWrapper>
@@ -61,7 +58,7 @@ const HeaderTag = ({
       <Tag
         contentEditable
         suppressContentEditableWarning
-        onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, setCursorPosition })}
+        onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index })}
         onKeyDown={(e) => stopEnterDefaultEvent(e as React.KeyboardEvent<HTMLElement>)}
       >
         {content}
@@ -74,8 +71,8 @@ const ParagraphTag = ({
   block: { content },
   index,
   handleInput,
-  cursorPosition,
-  setCursorPosition,
+  cursorPositionRef,
+  updateCursorPosition,
 }: EditableBlockProps & { block: ParagraphBlock }) => (
   <BlockWrapper>
     <Icons>
@@ -89,7 +86,9 @@ const ParagraphTag = ({
     <StyledBlockTag
       contentEditable
       suppressContentEditableWarning
-      onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, setCursorPosition })}
+      onKeyUp={(e) =>
+        handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, cursorPositionRef, updateCursorPosition })
+      }
       onKeyDown={stopEnterDefaultEvent}
       style={{ backgroundColor: 'aliceblue' }}
     >
@@ -102,8 +101,6 @@ const UnorderedItemTag = ({
   block: { content },
   index,
   handleInput,
-  cursorPosition,
-  setCursorPosition,
 }: EditableBlockProps & { block: UnorderedItemBlock }) => (
   <BlockWrapper>
     <Icons>
@@ -119,7 +116,7 @@ const UnorderedItemTag = ({
       <div
         contentEditable
         suppressContentEditableWarning
-        onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, setCursorPosition })}
+        onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index })}
         onKeyDown={(e) => stopEnterDefaultEvent(e)}
       >
         {content}
@@ -128,29 +125,17 @@ const UnorderedItemTag = ({
   </BlockWrapper>
 );
 
-const OrderedListTag = ({
-  block: { items },
-  index,
-  handleInput,
-  cursorPosition,
-  setCursorPosition,
-}: EditableBlockProps & { block: OrderedListBlock }) => (
+const OrderedListTag = ({ block: { items }, index, handleInput }: EditableBlockProps & { block: OrderedListBlock }) => (
   <ColumnGap>
     {items.map((item: OrderedItemBlock, itemIndex: number) => (
       <div key={`ol-wrapper-${index}-${itemIndex}`}>
-        <OrderedItemTag
-          item={item}
-          itemIndex={itemIndex}
-          index={index}
-          handleInput={handleInput}
-          setCursorPosition={setCursorPosition}
-        />
+        <OrderedItemTag item={item} itemIndex={itemIndex} index={index} handleInput={handleInput} />
       </div>
     ))}
   </ColumnGap>
 );
 
-const OrderedItemTag = ({ item, itemIndex, index, handleInput, setCursorPosition }: OrderedItemTagProps) => {
+const OrderedItemTag = ({ item, itemIndex, index, handleInput }: OrderedItemTagProps) => {
   return (
     <BlockWrapper>
       <Icons>
@@ -167,9 +152,7 @@ const OrderedItemTag = ({ item, itemIndex, index, handleInput, setCursorPosition
           key={`ol-${index}-${itemIndex}`}
           contentEditable
           suppressContentEditableWarning
-          onKeyUp={(e) =>
-            handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, itemIndex, setCursorPosition })
-          }
+          onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, itemIndex })}
           onKeyDown={(e) => stopEnterDefaultEvent(e)}
         >
           {item.content}
@@ -179,18 +162,13 @@ const OrderedItemTag = ({ item, itemIndex, index, handleInput, setCursorPosition
   );
 };
 
-const ImageTag = ({
-  block: { url, alt },
-  index,
-  handleInput,
-  setCursorPosition,
-}: EditableBlockProps & { block: ImageBlock }) => (
+const ImageTag = ({ block: { url, alt }, index, handleInput }: EditableBlockProps & { block: ImageBlock }) => (
   <div>
     <img src={url} alt={alt} />
     <p
       contentEditable
       suppressContentEditableWarning
-      onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, setCursorPosition })}
+      onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index })}
     >
       {alt}
     </p>
@@ -202,23 +180,12 @@ export default function EditableBlock({
   index,
   handleInput,
   showPopup,
-  cursorPosition,
-  setCursorPosition,
+  cursorPositionRef,
+  updateCursorPosition,
   isFocusedBlock,
 }: EditableBlockProps) {
   useEffect(() => {
-    const nodeOfCursor = cursorPosition.node;
-    if (isFocusedBlock && nodeOfCursor) {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      const nodeLength = nodeOfCursor.textContent?.length || 0;
-      const offset = Math.min(cursorPosition.offset, nodeLength);
-      // cursorPosition.offset : 저장된 커서 위치
-      range.setStart(nodeOfCursor, offset);
-      range.setEnd(nodeOfCursor, offset);
-      selection?.removeAllRanges();
-      selection?.addRange(range);
-    }
+    specifyPositionOfCursor({ cursorPositionRef, isFocusedBlock });
   }, [block]);
 
   const { type } = block;
@@ -228,9 +195,9 @@ export default function EditableBlock({
         block={block as HeaderBlock}
         index={index}
         handleInput={handleInput}
-        cursorPosition={cursorPosition}
-        setCursorPosition={setCursorPosition}
         isFocusedBlock={isFocusedBlock}
+        cursorPositionRef={cursorPositionRef}
+        updateCursorPosition={updateCursorPosition}
       />
     ),
     paragraph: (
@@ -238,9 +205,9 @@ export default function EditableBlock({
         block={block as ParagraphBlock}
         index={index}
         handleInput={handleInput}
-        cursorPosition={cursorPosition}
-        setCursorPosition={setCursorPosition}
         isFocusedBlock={isFocusedBlock}
+        cursorPositionRef={cursorPositionRef}
+        updateCursorPosition={updateCursorPosition}
       />
     ),
     'ul-item': (
@@ -248,9 +215,9 @@ export default function EditableBlock({
         block={block as UnorderedItemBlock}
         index={index}
         handleInput={handleInput}
-        cursorPosition={cursorPosition}
-        setCursorPosition={setCursorPosition}
         isFocusedBlock={isFocusedBlock}
+        cursorPositionRef={cursorPositionRef}
+        updateCursorPosition={updateCursorPosition}
       />
     ),
     'ordered-list': (
@@ -258,9 +225,9 @@ export default function EditableBlock({
         block={block as OrderedListBlock}
         index={index}
         handleInput={handleInput}
-        cursorPosition={cursorPosition}
-        setCursorPosition={setCursorPosition}
         isFocusedBlock={isFocusedBlock}
+        cursorPositionRef={cursorPositionRef}
+        updateCursorPosition={updateCursorPosition}
       />
     ),
     image: (
@@ -268,9 +235,9 @@ export default function EditableBlock({
         block={block as ImageBlock}
         index={index}
         handleInput={handleInput}
-        cursorPosition={cursorPosition}
-        setCursorPosition={setCursorPosition}
         isFocusedBlock={isFocusedBlock}
+        cursorPositionRef={cursorPositionRef}
+        updateCursorPosition={updateCursorPosition}
       />
     ),
   };

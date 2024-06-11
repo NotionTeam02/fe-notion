@@ -1,7 +1,7 @@
 import { Block, BlockControllerProps, ParagraphBlock } from '../constants';
 import { HandleInputProps } from '../components/EditableBlock';
 
-interface CursorPosition {
+export interface CursorPosition {
   node: Node | null;
   offset: number;
   blockOffset: number;
@@ -57,7 +57,8 @@ export default function useBlockController({
     },
     index: blockIndex,
     itemIndex,
-    setCursorPosition,
+    cursorPositionRef,
+    updateCursorPosition,
   }: HandleInputProps) => {
     let newBlocks = [...blocks];
     const block = newBlocks[blockIndex];
@@ -71,11 +72,11 @@ export default function useBlockController({
       blockOffset: 0,
     };
 
-    if (range && setCursorPosition) {
+    if (range && updateCursorPosition) {
       cursorPosition.node = range.startContainer;
       cursorPosition.offset = range.startOffset;
       cursorPosition.blockOffset = blockIndex;
-      setCursorPosition(cursorPosition);
+      updateCursorPosition(cursorPosition);
     }
 
     if (key === 'Backspace' && isBlankBlock(block)) {
@@ -86,16 +87,12 @@ export default function useBlockController({
     }
 
     if (key === 'Enter' && shiftKey) {
+      if (updateCursorPosition)
+        updateCursorPosition({ ...cursorPosition, offset: range?.startOffset ? range?.startOffset + 1 : 0 });
+
       newBlocks = insertLineBreak(blocks, blockIndex);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
-
-      if (setCursorPosition) {
-        setCursorPosition({
-          ...cursorPosition,
-          offset: cursorPosition.offset + 1,
-        });
-      }
 
       return;
     }
@@ -104,6 +101,8 @@ export default function useBlockController({
       newBlocks = addNewBlock(blocks, blockIndex);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
+
+      if (updateCursorPosition) updateCursorPosition({ ...cursorPosition, blockOffset: blockIndex + 1 });
       return;
     }
 
