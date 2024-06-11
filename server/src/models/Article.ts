@@ -19,7 +19,7 @@ const BlockSchema = new Schema(
   },
   { _id: false }
 );
-const ArticleSchema = new Schema({
+export const ArticleSchema = new Schema({
   id: { type: Number, required: true, unique: true },
   title: { type: String },
   icon: { type: String },
