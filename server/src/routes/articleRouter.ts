@@ -11,20 +11,13 @@ articleRouter.get('/:articleId', async (req: Request, res: Response) => {
     const teamspaceIdNumber = Number(teamspaceId);
     const articleIdNumber = Number(articleId);
 
-    if (isNaN(articleIdNumber) || isNaN(teamspaceIdNumber)) {
-      return res.status(400).json({ message: 'Invalid ID' });
-    }
+    if (isNaN(articleIdNumber) || isNaN(teamspaceIdNumber)) return res.status(400).json({ message: 'Invalid ID' });
 
     const teamspace = await Teamspace.findOne({ id: teamspaceIdNumber }).populate('articles');
-    if (!teamspace) {
-      return res.status(404).json({ message: 'Teamspace not found' });
-    }
+    if (!teamspace) return res.status(404).json({ message: 'Teamspace not found' });
 
     const article = teamspace.articles.find((article) => article._id.toString() === articleId);
-
-    if (!article) {
-      return res.status(404).json({ message: 'Article not found' });
-    }
+    if (!article) return res.status(404).json({ message: 'Article not found' });
 
     res.json(article);
   } catch (error) {

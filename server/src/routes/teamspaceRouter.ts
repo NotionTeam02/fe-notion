@@ -14,7 +14,6 @@ teamspaceRouter.get('/:teamspaceId', async (req: Request, res: Response) => {
     if (isNaN(teamspaceIdNumber)) return res.status(400).json({ message: 'Invalid teamspace ID' });
 
     const teamspace = await Teamspace.findOne({ id: teamspaceIdNumber });
-
     if (!teamspace) return res.status(404).json({ message: 'Teamspace not found' });
 
     res.json(teamspace);
@@ -28,14 +27,11 @@ teamspaceRouter.post('/', async (req: Request, res: Response) => {
   try {
     const { title } = req.body;
 
-    if (!title || typeof title !== 'string' || title.trim() === '') {
+    if (!title || typeof title !== 'string' || title.trim() === '')
       return res.status(400).json({ message: 'Invalid teamspace name' });
-    }
 
     const isDuplicate = await Teamspace.findOne({ title });
-    if (isDuplicate) {
-      return res.status(409).json({ message: 'Teamspace name already exists' });
-    }
+    if (isDuplicate) return res.status(409).json({ message: 'Teamspace name already exists' });
 
     const newTeamspace = new Teamspace({ title });
     await newTeamspace.save();
