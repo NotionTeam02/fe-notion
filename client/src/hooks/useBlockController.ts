@@ -91,8 +91,9 @@ export default function useBlockController({
     }
 
     if (key === 'Enter' && shiftKey) {
-      if (updateCursorPosition)
+      if (updateCursorPosition) {
         updateCursorPosition({ ...cursorPosition, offset: range?.startOffset ? range?.startOffset + 1 : 0 });
+      }
       newBlocks = insertLineBreak(blocks, blockIndex, cursorPosition.offset);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
@@ -101,11 +102,11 @@ export default function useBlockController({
     }
 
     if (key === 'Enter') {
+      if (updateCursorPosition) updateCursorPosition({ ...cursorPosition, blockOffset: blockIndex + 1 });
+
       newBlocks = addNewBlock(blocks, blockIndex);
       setBlocks(newBlocks);
       handleFetch(newBlocks);
-
-      if (updateCursorPosition) updateCursorPosition({ ...cursorPosition, blockOffset: blockIndex + 1 });
       return;
     }
 
