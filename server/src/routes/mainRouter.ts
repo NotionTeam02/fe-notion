@@ -1,9 +1,10 @@
 import express, { Request, Response, Router } from 'express';
 import User from '../models/User';
+import Teamspace from '../models/Teamspace';
 
-const userRouter: Router = express.Router();
+const mainRouter: Router = express.Router();
 
-userRouter.post('/login', async (req: Request, res: Response) => {
+mainRouter.post('/login', async (req: Request, res: Response) => {
   try {
     const { nickname } = req.body;
 
@@ -19,7 +20,7 @@ userRouter.post('/login', async (req: Request, res: Response) => {
   }
 });
 
-userRouter.post('/registration', async (req: Request, res: Response) => {
+mainRouter.post('/registration', async (req: Request, res: Response) => {
   try {
     const { nickname } = req.body;
 
@@ -38,4 +39,15 @@ userRouter.post('/registration', async (req: Request, res: Response) => {
   }
 });
 
-export default userRouter;
+mainRouter.get('/teamspaces', async (req: Request, res: Response) => {
+  try {
+    const teamspace = await Teamspace.find();
+
+    res.json(teamspace);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+export default mainRouter;
