@@ -1,10 +1,14 @@
 import { Schema, model } from 'mongoose';
-import { ArticleSchema } from './Article';
+import { ArticleSchema } from './Article.js';
 
 const TeamspaceSchema = new Schema({
-  id: { type: Number, required: true, unique: true },
-  title: { type: String, required: true, unique: true },
-  articles: [ArticleSchema],
+  title: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  articles: { type: [ArticleSchema], default: [] },
 });
 
 const Teamspace = model('Teamspace', TeamspaceSchema);
