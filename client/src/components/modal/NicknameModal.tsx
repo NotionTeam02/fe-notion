@@ -4,16 +4,17 @@ import { FlexColumn, BoxBackground, BoxBorder, ButtonBorder, SubmitBackground, S
 export default function NicknameModal() {
   return (
     <Wrapper>
-      <span>닉네임을 입력해주세요.</span>
-      <NicknameInput type="text" />
+      <span>로그인</span>
+      <NicknameInput type="text" placeholder="닉네임" />
       <SubmitButton>확인</SubmitButton>
+      <RegistrationButton>회원가입</RegistrationButton>
     </Wrapper>
   );
 }
 
 const Wrapper = styled(FlexColumn)`
   width: 300px;
-  height: 128px;
+  height: 174px;
   border: 1px solid #e2e5e8;
   border-radius: 12px;
   justify-content: center;
@@ -27,7 +28,7 @@ const NicknameInput = styled.input`
 
   width: 200px;
   height: 30px;
-  text-align: center;
+  padding: 0 1rem;
 
   &:focus {
     outline: none;
@@ -41,8 +42,21 @@ const SubmitButton = styled.button`
 
   border: 1px solid blue;
   opacity: 0.4;
+  cursor: pointer;
 
   &:hover {
     opacity: 1;
+  }
+`;
+
+const RegistrationButton = styled.button`
+  border: none;
+  background-color: transparent;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    color: blue;
+    text-decoration: underline;
   }
 `;
