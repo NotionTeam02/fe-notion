@@ -26,25 +26,48 @@ export const ColumnGap = styled(FlexColumn)`
   gap: 0.5rem;
 `;
 
-export const WeakColor = css`
-  color: #91918e;
+const Color = {
+  DefaultColor: '#5f5e5b',
+  WeakColor: '#91918e',
+  SubmitColor: '#fff',
+  BoxBackground: '#f3f4f6',
+  SubmitBackground: 'blue',
+};
+
+const FontSize = {
+  Default: '14px',
+  Small: '12px',
+};
+
+export const BoxBorder = css`
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
 `;
 
-export const DefaultColor = css`
-  color: #5f5e5b;
+export const ButtonBorder = css`
+  border-radius: 4px;
 `;
 
-export const SmallFontSize = css`
-  font-size: 12px;
+export const BoxBackground = css`
+  background-color: #f3f4f6;
 `;
 
-export const DefaultFontSize = css`
-  font-size: 14px;
+export const SubmitBackground = css`
+  background-color: blue;
+`;
+
+export const BoxBorder = css`
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+`;
+
+export const ButtonBorder = css`
+  border-radius: 4px;
 `;
 
 export const SideMenu = styled(RowGap)`
-  ${DefaultFontSize}
-  ${DefaultColor}
+  ${FontSize.Default}
+  ${Color.DefaultColor}
 
   box-sizing: border-box;
   width: 100%;
@@ -56,3 +79,10 @@ export const SideMenu = styled(RowGap)`
     background-color: rgba(0, 0, 0, 0.04);
   }
 `;
+
+export const themes = {
+  Color,
+  FontSize,
+};
+
+export default themes;
