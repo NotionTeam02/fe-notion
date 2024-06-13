@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express';
-import User from '../models/User';
-import Teamspace from '../models/Teamspace';
+import User from '../models/User.js';
+import Teamspace from '../models/Teamspace.js';
 
 const mainRouter: Router = express.Router();
 
@@ -8,7 +8,7 @@ mainRouter.post('/login', async (req: Request, res: Response) => {
   try {
     const { nickname } = req.body;
 
-    if (!nickname) return res.status(400).json({ message: 'Nickname and password are required' });
+    if (!nickname) return res.status(400).json({ message: 'Nickname is required' });
 
     const user = await User.findOne({ nickname });
     if (!user) return res.status(404).json({ message: 'Invalid nickname or password' });
@@ -24,7 +24,7 @@ mainRouter.post('/registration', async (req: Request, res: Response) => {
   try {
     const { nickname } = req.body;
 
-    if (!nickname) return res.status(400).json({ message: 'Nickname and password are required' });
+    if (!nickname) return res.status(400).json({ message: 'Nickname is required' });
 
     const existingUser = await User.findOne({ nickname });
     if (existingUser) return res.status(409).json({ message: 'Nickname already taken' });

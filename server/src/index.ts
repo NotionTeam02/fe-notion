@@ -4,7 +4,9 @@ import cors from 'cors';
 import articleRouter from './routes/articleRouter.js';
 import { Server } from 'socket.io';
 import setupSocket from './setup/socketSetup.js';
-import { setupMongoDB } from './setup/dbSetup.js';
+import { initializeDB, setupMongoDB } from './setup/dbSetup.js';
+import mainRouter from './routes/mainRouter.js';
+import teamspaceRouter from './routes/teamspaceRouter.js';
 
 export interface CustomRequest extends Request {
   io: Server;
@@ -23,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 const db = setupMongoDB(MONGO_DB_URL);
 const { server, io } = setupSocket(app);
 
+app.use('/', mainRouter);
+app.use('/api/teamspace', teamspaceRouter);
 app.use(
   '/api/article',
   (req, res, next) => {

@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from 'express';
-import Teamspace from '../models/Teamspace';
-import articleRouter from './articleRouter';
+import Teamspace from '../models/Teamspace.js';
+import articleRouter from './articleRouter.js';
+import mongoose from 'mongoose';
 
 const teamspaceRouter: Router = express.Router();
 
@@ -23,22 +24,25 @@ teamspaceRouter.get('/:teamspaceId', async (req: Request, res: Response) => {
   }
 });
 
-teamspaceRouter.post('/', async (req: Request, res: Response) => {
+teamspaceRouter.post('/', async (req, res) => {
   try {
     const { title } = req.body;
 
-    if (!title || typeof title !== 'string' || title.trim() === '')
+    if (!title || typeof title !== 'string' || title.trim() === '') {
       return res.status(400).json({ message: 'Invalid teamspace name' });
+    }
 
     const isDuplicate = await Teamspace.findOne({ title });
-    if (isDuplicate) return res.status(409).json({ message: 'Teamspace name already exists' });
+    if (isDuplicate) {
+      return res.status(409).json({ message: 'Teamspace name already exists' });
+    }
 
-    const newTeamspace = new Teamspace({ title });
+    const newTeamspace = new Teamspace({ title, articles: [] });
     await newTeamspace.save();
 
     res.status(201).json({ message: 'Teamspace successfully created' });
   } catch (error) {
-    console.error(error);
+    console.error('Server error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -89,3 +93,5 @@ teamspaceRouter.delete('/:teamspaceId', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+export default teamspaceRouter;

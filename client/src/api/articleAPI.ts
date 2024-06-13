@@ -15,6 +15,7 @@ export const sendArticleRequestById = async (id: number) => {
     console.error(error);
   }
 };
+
 export const updateArticleRequestById = async (id: number, blocks: Block[]) => {
   try {
     const response = await fetch(`${SERVER}/api/article/${id}`, {
