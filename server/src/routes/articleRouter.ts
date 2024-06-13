@@ -8,12 +8,8 @@ const articleRouter: Router = express.Router();
 articleRouter.get('/:articleId', async (req: Request, res: Response) => {
   try {
     const { teamspaceId, articleId } = req.params;
-    const teamspaceIdNumber = Number(teamspaceId);
-    const articleIdNumber = Number(articleId);
 
-    if (isNaN(articleIdNumber) || isNaN(teamspaceIdNumber)) return res.status(400).json({ message: 'Invalid ID' });
-
-    const teamspace = await Teamspace.findOne({ id: teamspaceIdNumber }).populate('articles');
+    const teamspace = await Teamspace.findOne({ id: teamspaceId }).populate('articles');
     if (!teamspace) return res.status(404).json({ message: 'Teamspace not found' });
 
     const article = teamspace.articles.find((article) => article._id.toString() === articleId);
@@ -29,16 +25,13 @@ articleRouter.get('/:articleId', async (req: Request, res: Response) => {
 articleRouter.post('/', async (req: Request, res: Response) => {
   try {
     const { teamspaceId } = req.params;
-    const teamspaceIdNumber = Number(teamspaceId);
     const { title, content } = req.body;
-
-    if (isNaN(teamspaceIdNumber)) return res.status(400).json({ message: 'Invalid teamspace ID' });
 
     if (!title || !content) {
       return res.status(400).json({ message: 'Title and content are required' });
     }
 
-    const teamspace = await Teamspace.findOne({ id: teamspaceIdNumber });
+    const teamspace = await Teamspace.findOne({ id: teamspaceId });
     if (!teamspace) {
       return res.status(404).json({ message: 'Teamspace not found' });
     }
@@ -59,15 +52,9 @@ articleRouter.post('/', async (req: Request, res: Response) => {
 articleRouter.patch('/:articleId', async (req: Request, res: Response) => {
   try {
     const { teamspaceId, articleId } = req.params;
-    const teamspaceIdNumber = Number(teamspaceId);
-    const articleIdNumber = Number(articleId);
     const { content } = req.body;
 
-    if (isNaN(articleIdNumber) || isNaN(teamspaceIdNumber)) {
-      return res.status(400).json({ message: 'Invalid ID' });
-    }
-
-    const teamspace = await Teamspace.findOne({ id: teamspaceIdNumber }).populate('articles');
+    const teamspace = await Teamspace.findOne({ id: teamspaceId }).populate('articles');
     if (!teamspace) {
       return res.status(404).json({ message: 'Teamspace not found' });
     }
@@ -80,7 +67,7 @@ articleRouter.patch('/:articleId', async (req: Request, res: Response) => {
 
     article.content = content || article.content;
     article.updatedAt = Date.now().toString();
-    await article.save();
+    await teamspace.save();
 
     const io = (req as unknown as CustomRequest).io;
     if (io) {
@@ -97,14 +84,8 @@ articleRouter.patch('/:articleId', async (req: Request, res: Response) => {
 articleRouter.delete('/:articleId', async (req: Request, res: Response) => {
   try {
     const { teamspaceId, articleId } = req.params;
-    const teamspaceIdNumber = Number(teamspaceId);
-    const articleIdNumber = Number(articleId);
 
-    if (isNaN(articleIdNumber) || isNaN(teamspaceIdNumber)) {
-      return res.status(400).json({ message: 'Invalid ID' });
-    }
-
-    const teamspace = await Teamspace.findOne({ id: teamspaceIdNumber }).populate('articles');
+    const teamspace = await Teamspace.findOne({ id: teamspaceId }).populate('articles');
     if (!teamspace) {
       return res.status(404).json({ message: 'Teamspace not found' });
     }

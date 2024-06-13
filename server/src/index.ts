@@ -1,10 +1,9 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import articleRouter from './routes/articleRouter.js';
 import { Server } from 'socket.io';
 import setupSocket from './setup/socketSetup.js';
-import { initializeDB, setupMongoDB } from './setup/dbSetup.js';
+import { setupMongoDB } from './setup/dbSetup.js';
 import mainRouter from './routes/mainRouter.js';
 import teamspaceRouter from './routes/teamspaceRouter.js';
 
@@ -26,15 +25,7 @@ const db = setupMongoDB(MONGO_DB_URL);
 const { server, io } = setupSocket(app);
 
 app.use('/', mainRouter);
-app.use('/api/teamspace', teamspaceRouter);
-app.use(
-  '/api/article',
-  (req, res, next) => {
-    (req as unknown as CustomRequest).io = io;
-    next();
-  },
-  articleRouter
-);
+app.use('/api/teamspace', teamspaceRouter(io));
 
 server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

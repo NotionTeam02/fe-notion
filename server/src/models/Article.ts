@@ -19,6 +19,7 @@ const BlockSchema = new Schema(
   },
   { _id: false }
 );
+
 export const ArticleSchema = new Schema({
   title: { type: String },
   icon: { type: String },
