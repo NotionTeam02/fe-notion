@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { BoxBackground, BoxBorder, ButtonBorder, FlexColumn, SubmitBackground, SubmitColor } from '../../styles/themes';
+import { BoxBackground, BoxBorder, ButtonBorder, FlexColumn, SubmitBackground, themes } from '../../styles/themes';
+
+const {
+  Color: { SubmitColor },
+} = themes;
 
 export default function RegistrationModal() {
   return (
@@ -36,10 +40,10 @@ const NicknameInput = styled.input`
 
 const SubmitButton = styled.button`
   ${SubmitBackground}
-  ${SubmitColor}
   ${ButtonBorder}
 
   border: 1px solid blue;
+  color: ${SubmitColor};
   opacity: 0.4;
 
   &:hover {
