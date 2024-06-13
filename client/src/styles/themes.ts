@@ -48,6 +48,14 @@ export const ButtonBorder = css`
   border-radius: 4px;
 `;
 
+export const BoxBackground = css`
+  background-color: #f3f4f6;
+`;
+
+export const SubmitBackground = css`
+  background-color: blue;
+`;
+
 export const SideMenu = styled(RowGap)`
   ${FontSize.Default}
   ${Color.DefaultColor}
