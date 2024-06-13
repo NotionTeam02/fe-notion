@@ -1,16 +1,23 @@
 import styled from 'styled-components';
 import { TeamspaceDescription } from '../../constants';
 import { FlexColumn } from '../../styles/themes';
+import { useNavigate } from 'react-router-dom';
 
 export interface TeamspacePanelProps {
   teamspace: TeamspaceDescription;
 }
 
-export default function TeamspacePanel({ teamspace: { title } }: TeamspacePanelProps) {
+const FIRST_PAGE = 0;
+
+export default function TeamspacePanel({ teamspace }: TeamspacePanelProps) {
+  const { title, _id } = teamspace;
+  const navigate = useNavigate();
+  const defaultArticleId = teamspace.articles[FIRST_PAGE]._id || '';
+
   return (
     <Wrapper>
       <TitleText>{title}</TitleText>
-      <button>들어가기</button>
+      <button onClick={() => navigate(`/teamspace/${_id}/article/${defaultArticleId}`)}>들어가기</button>
     </Wrapper>
   );
 }

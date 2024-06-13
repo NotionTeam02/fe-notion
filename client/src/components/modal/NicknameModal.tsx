@@ -23,7 +23,7 @@ export default function NicknameModal() {
   return (
     <Wrapper>
       <span>로그인</span>
-      <NicknameInput type="text" placeholder="닉네임" />
+      <NicknameInput ref={inputRef} type="text" placeholder="닉네임" />
       <SubmitButton onClick={handleSubmitClick}>확인</SubmitButton>
       <RegistrationButton onClick={() => navigate('/registration')}>회원가입</RegistrationButton>
     </Wrapper>
