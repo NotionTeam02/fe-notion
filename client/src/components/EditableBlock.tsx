@@ -172,11 +172,11 @@ export default function EditableBlock({
   return <>{blockTag[type]}</>;
 }
 
-const OrderedListIndex = styled.span`
+export const OrderedListIndex = styled.span`
   padding: 0 6px;
 `;
 
-const StyledBlockTag = styled.div`
+export const StyledBlockTag = styled.div`
   white-space: pre-wrap; /* 줄 바꿈과 공백을 그대로 렌더링 */
   word-break: break-word;
 `;
