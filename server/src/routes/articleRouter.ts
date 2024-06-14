@@ -3,13 +3,13 @@ import Article from '../models/Article.js';
 import { CustomRequest } from '../index.js';
 import Teamspace from '../models/Teamspace.js';
 
-const articleRouter: Router = express.Router();
+const articleRouter: Router = express.Router({ mergeParams: true });
 
 articleRouter.get('/:articleId', async (req: Request, res: Response) => {
   try {
     const { teamspaceId, articleId } = req.params;
 
-    const teamspace = await Teamspace.findOne({ id: teamspaceId }).populate('articles');
+    const teamspace = await Teamspace.findOne({ _id: teamspaceId }).populate('articles');
     if (!teamspace) return res.status(404).json({ message: 'Teamspace not found' });
 
     const article = teamspace.articles.find((article) => article._id.toString() === articleId);
