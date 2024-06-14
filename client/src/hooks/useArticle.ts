@@ -4,6 +4,8 @@ import { sendArticleRequestById, updateArticleRequestById } from '../api/article
 import { io } from 'socket.io-client';
 import { debounce } from '../utils/timeoutUtils';
 import { useParams } from 'react-router-dom';
+import { useCursorStore } from '../stores/cursorStore';
+import { CursorPosition, storeCursorPosition } from '../helpers/cursorHelpers';
 
 const SERVER = import.meta.env.VITE_SERVER;
 
@@ -11,6 +13,7 @@ export default function useArticle() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const clientBlocksRef = useRef<Block[]>([]);
   const { teamspaceId, articleId } = useParams();
+  const { setCursorPosition } = useCursorStore();
 
   useEffect(() => {
     const socket = io(SERVER);
@@ -33,12 +36,14 @@ export default function useArticle() {
   }, [blocks]);
 
   const debouncedFetch = useCallback(
-    debounce((updatedBlocks: Block[]) => {
+    debounce((updatedBlocks: Block[], cursorPosition: CursorPosition) => {
       updateArticleRequestById({
         teamspaceId: teamspaceId || '',
         articleId: articleId || '',
         blocks: updatedBlocks,
       }).then(({ content }) => {
+        //updateCursorPositionRef
+        setCursorPosition(cursorPosition);
         setBlocks(content);
       });
     }, 1000),
@@ -46,11 +51,12 @@ export default function useArticle() {
   );
 
   const handleContentChange = (updatedBlock: Block, index: number) => {
+    const cursorPosition = storeCursorPosition();
     const newBlocks = [...blocks];
     newBlocks[index] = updatedBlock;
     clientBlocksRef.current[index] = updatedBlock;
     setBlocks(clientBlocksRef.current);
-    debouncedFetch(clientBlocksRef.current);
+    debouncedFetch(clientBlocksRef.current, cursorPosition);
   };
 
   return {
