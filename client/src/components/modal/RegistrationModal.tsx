@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import { BoxBackground, BoxBorder, ButtonBorder, FlexColumn, SubmitBackground, themes } from '../../styles/themes';
 import { useRef } from 'react';
-import { postRegistration } from '../../api/indexAPI';
+import { postRegistration } from '../../api/mainAPI';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { message } from 'antd';
 
 const {
   Color: { SubmitColor },
@@ -16,9 +18,13 @@ export default function RegistrationModal() {
   };
   const navigate = useNavigate();
 
-  const handleSubmitClick = () => {
-    postRegistration(getInputText() || '').then(() => navigate('/login'));
-  };
+  const { mutate: fetchRegistration } = useMutation({
+    mutationFn: postRegistration,
+    onSuccess: () => navigate('/login'),
+    onError: ({ message: errorMessage }) => message.warning(errorMessage),
+  });
+
+  const handleSubmitClick = () => fetchRegistration(getInputText() || '');
 
   return (
     <Wrapper>
@@ -37,6 +43,10 @@ const Wrapper = styled(FlexColumn)`
   justify-content: center;
   align-items: center;
   gap: 14px;
+`;
+
+const ErrorText = styled.span`
+  color: red;
 `;
 
 const NicknameInput = styled.input`

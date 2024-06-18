@@ -3,25 +3,43 @@ import { TeamspaceDescription } from '../../constants';
 import { FlexColumn } from '../../styles/themes';
 import TeamspacePanel from './TeamspacePanel';
 import { useEffect, useState } from 'react';
-import { postNewTeamspace, sendTeamspaceListRequest } from '../../api/indexAPI';
+import { postNewTeamspace, sendTeamspaceListRequest } from '../../api/mainAPI';
 import TeamspaceCreateModal from './TeamspaceCreateModal';
+import useUserStore from '../../hooks/useUserStore';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import Loading from '../loading/Loading';
+import { message } from 'antd';
 
 export default function TeamspaceModal() {
-  const [teamspaces, setTeamspaces] = useState<TeamspaceDescription[]>([]);
+  const client = useQueryClient();
+  const { userId, isLoggedIn } = useUserStore();
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const { data: teamspaces, isPending } = useSuspenseQuery<TeamspaceDescription[]>({
+    queryKey: ['teamspaces'],
+    queryFn: sendTeamspaceListRequest,
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutate: fetchNewTeamspace } = useMutation({
+    mutationFn: postNewTeamspace,
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ['teamspaces'] });
+      setIsCreateFormOpen(false);
+    },
+    onError: ({ message: errorMessage }) => message.warning(errorMessage),
+  });
 
   useEffect(() => {
-    sendTeamspaceListRequest().then((data) => setTeamspaces(data));
+    // 세션 구현 이전 로그인 상태를 임시로 클라이언트에서 관리
+    if (!isLoggedIn) navigate('/login');
   }, []);
 
   const handleAddButtonClick = () => setIsCreateFormOpen(true);
   const handleCancelClick = () => setIsCreateFormOpen(false);
-  const handleSubmitClick = (title: string) => {
-    postNewTeamspace(title).then(() => {
-      sendTeamspaceListRequest().then((data) => setTeamspaces(data));
-      setIsCreateFormOpen(false);
-    });
-  };
+  const handleSubmitClick = (title: string) => fetchNewTeamspace(title);
 
   return (
     <Wrapper>
@@ -35,6 +53,7 @@ export default function TeamspaceModal() {
       </TeamspaceListBox>
       <AddButton onClick={handleAddButtonClick}>팀 스페이스 추가 +</AddButton>
       {isCreateFormOpen && <TeamspaceCreateModal {...{ handleCancelClick, handleSubmitClick }} />}
+      {isPending && <Loading />}
     </Wrapper>
   );
 }

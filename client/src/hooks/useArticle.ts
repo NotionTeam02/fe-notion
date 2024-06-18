@@ -1,50 +1,56 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Block } from '../constants';
 import { sendArticleRequestById, updateArticleRequestById } from '../api/articleAPI';
 import { io } from 'socket.io-client';
 import { debounce } from '../utils/timeoutUtils';
 import { useParams } from 'react-router-dom';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useCursorStore } from '../stores/cursorStore';
 import { CursorPosition, storeCursorPosition } from '../helpers/cursorHelpers';
 
 const SERVER = import.meta.env.VITE_SERVER;
 
 export default function useArticle() {
-  const [blocks, setBlocks] = useState<Block[]>([]);
   const clientBlocksRef = useRef<Block[]>([]);
   const { teamspaceId, articleId } = useParams();
+  const queryClient = useQueryClient();
+
+  const { data: blocks = [] } = useSuspenseQuery<Block[]>({
+    queryKey: [`article-${articleId}`],
+    queryFn: async () => {
+      const response = await sendArticleRequestById({ teamspaceId, articleId });
+      return response.content;
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutate: updateArticle } = useMutation({
+    mutationFn: updateArticleRequestById,
+  });
   const { setCursorPosition } = useCursorStore();
 
   useEffect(() => {
     const socket = io(SERVER);
 
-    socket.on('articleUpdated', (data) => {
-      setBlocks(data.content);
-    });
-
-    sendArticleRequestById({ teamspaceId: teamspaceId || '', articleId: articleId || '' }).then(({ content }) => {
-      setBlocks(content);
+    socket.on(`article-${articleId}`, ({ content }) => {
+      clientBlocksRef.current = content;
+      queryClient.setQueryData([`article-${articleId}`], content);
     });
 
     return () => {
-      socket.off('articleUpdated');
+      socket.off(`article-${articleId}`);
     };
   }, [teamspaceId, articleId]);
-
-  useEffect(() => {
-    clientBlocksRef.current = blocks;
-  }, [blocks]);
 
   const debouncedFetch = useCallback(
     debounce((updatedBlocks: Block[], cursorPosition: CursorPosition) => {
       updateArticleRequestById({
-        teamspaceId: teamspaceId || '',
-        articleId: articleId || '',
+        teamspaceId,
+        articleId,
         blocks: updatedBlocks,
-      }).then(({ content }) => {
+      }).then(() => {
         //updateCursorPositionRef
         setCursorPosition(cursorPosition);
-        setBlocks(content);
       });
     }, 1000),
     []
@@ -55,13 +61,12 @@ export default function useArticle() {
     const newBlocks = [...blocks];
     newBlocks[index] = updatedBlock;
     clientBlocksRef.current[index] = updatedBlock;
-    setBlocks(clientBlocksRef.current);
     debouncedFetch(clientBlocksRef.current, cursorPosition);
   };
 
   return {
     blocks,
-    setBlocks,
+    setBlocks: (newBlocks: Block[]) => (clientBlocksRef.current = newBlocks),
     debouncedFetch,
     handleContentChange,
   };
