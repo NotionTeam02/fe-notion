@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import TeamspaceModal, { TeamspaceModalProps } from './TeamspaceModal';
+import TeamspaceModal from './TeamspaceModal';
 
 const mockTeamspaces = [
   {
@@ -233,9 +233,7 @@ export default {
   component: TeamspaceModal,
 } as Meta;
 
-const Template: StoryFn<TeamspaceModalProps> = (args) => <TeamspaceModal {...args} />;
+const Template: StoryFn = () => <TeamspaceModal />;
 
 export const DefaultTeamspaceModal = Template.bind({});
-DefaultTeamspaceModal.args = {
-  teamspaces: mockTeamspaces,
-};
+DefaultTeamspaceModal.args = {};
