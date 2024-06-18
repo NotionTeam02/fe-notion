@@ -1,5 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import TeamspacePanel, { TeamspacePanelProps } from './TeamspacePanel';
+import { MemoryRouter } from 'react-router-dom';
 
 const mockTeamspace = {
   _id: '1234',
@@ -21,6 +22,13 @@ const mockTeamspace = {
 export default {
   title: 'Modal/TeamspacePanel',
   component: TeamspacePanel,
+  decorators: [
+    (Story: StoryFn) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 } as Meta;
 
 const Template: StoryFn<TeamspacePanelProps> = (args) => <TeamspacePanel {...args} />;
