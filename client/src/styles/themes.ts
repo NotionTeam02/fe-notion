@@ -35,6 +35,7 @@ const Color = {
   SubmitBackground: 'blue',
   ShadowColor: 'rgba(0, 0, 0, 0.377)',
   ErrorColor: 'red',
+  BackgroudColor: 'white',
 };
 
 const FontSize = {
