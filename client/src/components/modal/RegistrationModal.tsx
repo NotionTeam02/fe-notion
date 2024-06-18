@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { postRegistration } from '../../api/indexAPI';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import Loading from '../loading/Loading';
 
 const {
   Color: { SubmitColor },
@@ -17,7 +18,7 @@ export default function RegistrationModal() {
   };
   const navigate = useNavigate();
 
-  const { mutate: fetchRegistration } = useMutation({
+  const { mutate: fetchRegistration, isPending } = useMutation({
     mutationFn: postRegistration,
     onSuccess: () => navigate('/login'),
   });
@@ -29,6 +30,7 @@ export default function RegistrationModal() {
       <span>회원가입</span>
       <NicknameInput ref={inputRef} type="text" placeholder="닉네임" />
       <SubmitButton onClick={handleSubmitClick}>확인</SubmitButton>
+      {isPending && <Loading />}
     </Wrapper>
   );
 }

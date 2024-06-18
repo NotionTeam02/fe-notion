@@ -7,7 +7,8 @@ import { postNewTeamspace, sendTeamspaceListRequest } from '../../api/indexAPI';
 import TeamspaceCreateModal from './TeamspaceCreateModal';
 import useUserStore from '../../hooks/useUserStore';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import Loading from '../loading/Loading';
 
 export default function TeamspaceModal() {
   const client = useQueryClient();
@@ -15,9 +16,10 @@ export default function TeamspaceModal() {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { data: teamspaces } = useQuery<TeamspaceDescription[]>({
+  const { data: teamspaces, isPending } = useSuspenseQuery<TeamspaceDescription[]>({
     queryKey: ['teamspaces'],
     queryFn: sendTeamspaceListRequest,
+    refetchOnWindowFocus: false,
   });
 
   const { mutate: fetchNewTeamspace } = useMutation({
@@ -42,14 +44,14 @@ export default function TeamspaceModal() {
       <span>팀 스페이스 목록</span>
       <TeamspaceListBox>
         <TeamspaceListContent>
-          {teamspaces &&
-            teamspaces.map((teamspace, index) => (
-              <TeamspacePanel key={`teamspace-panel-${index}`} {...{ teamspace }} />
-            ))}
+          {teamspaces.map((teamspace, index) => (
+            <TeamspacePanel key={`teamspace-panel-${index}`} {...{ teamspace }} />
+          ))}
         </TeamspaceListContent>
       </TeamspaceListBox>
       <AddButton onClick={handleAddButtonClick}>팀 스페이스 추가 +</AddButton>
       {isCreateFormOpen && <TeamspaceCreateModal {...{ handleCancelClick, handleSubmitClick }} />}
+      {isPending && <Loading />}
     </Wrapper>
   );
 }
