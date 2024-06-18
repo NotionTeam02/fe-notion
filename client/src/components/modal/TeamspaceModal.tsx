@@ -3,12 +3,13 @@ import { TeamspaceDescription } from '../../constants';
 import { FlexColumn } from '../../styles/themes';
 import TeamspacePanel from './TeamspacePanel';
 import { useEffect, useState } from 'react';
-import { postNewTeamspace, sendTeamspaceListRequest } from '../../api/indexAPI';
+import { postNewTeamspace, sendTeamspaceListRequest } from '../../api/mainAPI';
 import TeamspaceCreateModal from './TeamspaceCreateModal';
 import useUserStore from '../../hooks/useUserStore';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import Loading from '../loading/Loading';
+import { message } from 'antd';
 
 export default function TeamspaceModal() {
   const client = useQueryClient();
@@ -28,6 +29,7 @@ export default function TeamspaceModal() {
       client.invalidateQueries({ queryKey: ['teamspaces'] });
       setIsCreateFormOpen(false);
     },
+    onError: ({ message: errorMessage }) => message.warning(errorMessage),
   });
 
   useEffect(() => {

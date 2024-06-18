@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { BoxBackground, BoxBorder, ButtonBorder, FlexColumn, SubmitBackground, themes } from '../../styles/themes';
 import { useRef } from 'react';
-import { postRegistration } from '../../api/indexAPI';
+import { postRegistration } from '../../api/mainAPI';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import Loading from '../loading/Loading';
+import { message } from 'antd';
 
 const {
   Color: { SubmitColor },
@@ -18,9 +18,10 @@ export default function RegistrationModal() {
   };
   const navigate = useNavigate();
 
-  const { mutate: fetchRegistration, isPending } = useMutation({
+  const { mutate: fetchRegistration } = useMutation({
     mutationFn: postRegistration,
     onSuccess: () => navigate('/login'),
+    onError: ({ message: errorMessage }) => message.warning(errorMessage),
   });
 
   const handleSubmitClick = () => fetchRegistration(getInputText() || '');
@@ -30,7 +31,6 @@ export default function RegistrationModal() {
       <span>회원가입</span>
       <NicknameInput ref={inputRef} type="text" placeholder="닉네임" />
       <SubmitButton onClick={handleSubmitClick}>확인</SubmitButton>
-      {isPending && <Loading />}
     </Wrapper>
   );
 }
@@ -43,6 +43,10 @@ const Wrapper = styled(FlexColumn)`
   justify-content: center;
   align-items: center;
   gap: 14px;
+`;
+
+const ErrorText = styled.span`
+  color: red;
 `;
 
 const NicknameInput = styled.input`
