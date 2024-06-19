@@ -1,9 +1,12 @@
-import { PopupWrapper, PopupLineWrapper, PopupLine } from '../../styles/themes';
+import styled from 'styled-components';
+import themes, { PopupWrapper, PopupLineWrapper, PopupLine } from '../../styles/themes';
 import { CommentOutlined, StarFilled, DeleteOutlined, RetweetOutlined, RightOutlined } from '@ant-design/icons';
+
+const { BackgroudColor } = themes.Color;
 
 export default function EditPopup() {
   return (
-    <PopupWrapper>
+    <EditPopupWrapper>
       <PopupLineWrapper>
         <PopupLine>
           <div>
@@ -45,6 +48,13 @@ export default function EditPopup() {
           </div>
         </PopupLine>
       </PopupLineWrapper>
-    </PopupWrapper>
+    </EditPopupWrapper>
   );
 }
+const EditPopupWrapper = styled(PopupWrapper)`
+  position: absolute;
+  left: 20px;
+  top: 0px;
+  background-color: ${BackgroudColor};
+  z-index: 1;
+`;

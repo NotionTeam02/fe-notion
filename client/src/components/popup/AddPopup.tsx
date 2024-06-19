@@ -10,7 +10,7 @@ import codeImg from '../../assets/images/sub_code.png';
 import quoteImg from '../../assets/images/sub_quote.png';
 import CustomPopupImage from './CustomPopupImage';
 
-const { WeakColor } = themes.Color;
+const { WeakColor, BackgroudColor } = themes.Color;
 
 export interface PopupContent {
   img: string;
@@ -77,10 +77,12 @@ const PopupHeadLineWrapper = styled.div`
   font-size: 13px;
   color: ${WeakColor};
 `;
+
 const Scroll = styled.div`
   height: 300px;
   overflow: auto;
 `;
+
 const AddPopupLine = styled(PopupLine)`
   height: 55px;
 `;
@@ -89,18 +91,17 @@ const ItemWrapper = styled(FlexColumn)`
   justify-content: center;
   height: 100%;
 `;
+
 const Item = styled(FlexColumn)`
   justify-content: center;
   height: 100%;
 `;
-const SubPopupWrapper = styled(PopupWrapper)`
-  min-width: 350px;
-  max-width: 350px;
-`;
+
 export const PopupImgWrapper = styled(FlexColumn)`
   justify-content: center;
   align-items: center;
 `;
+
 const PopupItemWrapper = styled(PopupImgWrapper)`
   align-items: start;
 
@@ -114,4 +115,14 @@ const PopupItemWrapper = styled(PopupImgWrapper)`
     width: 230px;
     font-size: 12px;
   }
+`;
+
+const SubPopupWrapper = styled(PopupWrapper)`
+  min-width: 350px;
+  max-width: 350px;
+  position: absolute;
+  left: 10px;
+  top: 40px;
+  background-color: ${BackgroudColor};
+  z-index: 1;
 `;
