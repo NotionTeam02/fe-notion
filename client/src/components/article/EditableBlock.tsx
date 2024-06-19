@@ -7,12 +7,12 @@ import {
   OrderedItemBlock,
   ParagraphBlock,
   OrderedListBlock,
-} from '../constants';
-import { ColumnGap, Flex } from '../styles/themes';
+} from '../../constants';
+import { ColumnGap, Flex } from '../../styles/themes';
 import React, { useEffect, useLayoutEffect } from 'react';
-import { CursorPosition, specifyPositionOfCursor } from '../helpers/cursorHelpers';
+import { CursorPosition, specifyPositionOfCursor } from '../../helpers/cursorHelpers';
 import BlockTag from './BlockTag';
-import { useCursorStore } from '../stores/cursorStore';
+import { useCursorStore } from '../../stores/cursorStore';
 
 export interface HandleInputProps {
   e: React.KeyboardEvent<HTMLElement>;

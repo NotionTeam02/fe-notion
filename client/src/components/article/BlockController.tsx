@@ -1,7 +1,7 @@
-import { BlockControllerProps } from '../constants';
+import { BlockControllerProps } from '../../constants';
 import EditableBlock from './EditableBlock';
-import useBlockController from '../hooks/useBlockController';
-import { ColumnGap } from '../styles/themes';
+import useBlockController from '../../hooks/useBlockController';
+import { ColumnGap } from '../../styles/themes';
 
 export default function BlockController(props: BlockControllerProps) {
   const { blocks } = props;

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { FlexColumn, PopupWrapper } from '../../styles/themes';
 import CustomPopupImage from './CustomPopupImage';
 import themes from '../../styles/themes';
-
 import pragraphImg from '../../assets/images/preview_pragraph.png';
 import header1Img from '../../assets/images/preview_header1.png';
 import header2Img from '../../assets/images/preview_header2.png';

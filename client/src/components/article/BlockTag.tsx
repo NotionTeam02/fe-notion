@@ -1,7 +1,7 @@
 import { HolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
-import { FlexRow } from '../styles/themes';
+import { FlexRow } from '../../styles/themes';
 
 export default function BlockTag({ contentTag }: { contentTag: ReactNode }) {
   return (
