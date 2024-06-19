@@ -12,13 +12,13 @@ import CustomPopupImage from './CustomPopupImage';
 
 const { WeakColor } = themes.Color;
 
-interface PopupContent {
+export interface PopupContent {
   img: string;
   optionTitle: string;
   description: string;
 }
-type PopupContentItem = { [key: string]: PopupContent };
-const subPopupContents: PopupContentItem[] = [
+export type PopupContentItem = { [key: string]: PopupContent };
+export const subPopupContents: PopupContentItem[] = [
   { paragraph: { img: pragraphImg, optionTitle: '텍스트', description: '일반 텍스트를 사용해 쓰기를 시작하세요.' } },
   { Header1: { img: header1Img, optionTitle: '제목1', description: '섹션 제목(대)' } },
   { Header2: { img: header2Img, optionTitle: '제목2', description: '섹션 제목(중)' } },
