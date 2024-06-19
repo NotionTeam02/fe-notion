@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import themes from '../../styles/themes';
 
-const { BackgroudColor: defaultBackGroundColor, WeakColor } = themes.Color;
+const { BackgroudColor: defaultBackGroundColor, ShadowColor } = themes.Color;
 
 interface CustomPopupImageProps {
   className?: string;
@@ -11,9 +11,9 @@ interface CustomPopupImageProps {
   src: string;
 }
 interface StyledImgProps {
-  widthProp: number;
-  heightProp: number;
-  BackgroudColor: string;
+  $width: number;
+  $height: number;
+  $backgroudColor: string;
 }
 
 export default function CustomPopupImage({
@@ -23,17 +23,15 @@ export default function CustomPopupImage({
   height = 23,
   src = '',
 }: CustomPopupImageProps) {
-  return (
-    <StyledImg className={className} BackgroudColor={BackgroudColor} widthProp={width} heightProp={height} src={src} />
-  );
+  return <StyledImg className={className} $backgroudColor={BackgroudColor} $width={width} $height={height} src={src} />;
 }
 
 const StyledImg = styled.img<StyledImgProps>`
   display: block;
   object-fit: cover;
   border-radius: 4px;
-  background: ${({ BackgroudColor }) => BackgroudColor};
-  width: ${({ widthProp }) => widthProp}px;
-  height: ${({ heightProp }) => heightProp}px;
-  border: 1px solid ${WeakColor};
+  background: ${({ $backgroudColor }) => $backgroudColor};
+  width: ${({ $width }) => $width}px;
+  height: ${({ $height }) => $height}px;
+  border: 1px solid ${ShadowColor};
 `;
