@@ -43,7 +43,7 @@ export default function PreviewPopup({ previewTagType }: PreviewPopupProps) {
             <CustomPopupImage width={130} height={130} src={img}></CustomPopupImage>
           </PopupImgWrapper>
           <PopupItemWrapper>
-            <span className="subscription">{description}</span>
+            <span className="description">{description}</span>
           </PopupItemWrapper>
         </>
       )}
@@ -57,14 +57,14 @@ const PreviewPopupWrapper = styled(PopupWrapper)`
   max-width: 150px;
   padding: 10px;
 `;
-const PopupImgWrapper = styled(FlexColumn)`
+export const PopupImgWrapper = styled(FlexColumn)`
   justify-content: center;
   align-items: center;
 `;
 
 const PopupItemWrapper = styled(PopupImgWrapper)`
   align-items: start;
-  & .subscription {
+  & .description {
     color: ${BackgroudColor};
     width: 130px;
     word-wrap: break-word;
