@@ -11,12 +11,22 @@ import orderListImg from '../../assets/images/preview_order_list.png';
 import codeImg from '../../assets/images/preview_code.png';
 import quoteImg from '../../assets/images/preview_quote.png';
 
+const { BackgroudColor, PreviewBgColor } = themes.Color;
+
+type PreviewType = keyof typeof previewPopupContents;
+interface StyledPopupProps {
+  $left: number;
+}
+export interface PreviewPopupProps extends StyledPopupProps {
+  $top: number;
+  previewType: PreviewType;
+}
 interface PopupContent {
   img: string;
   description: string;
 }
 
-const previewPopupContents: { [key: string]: PopupContent } = {
+export const previewPopupContents: { [key: string]: PopupContent } = {
   paragraph: { img: pragraphImg, description: '일반 텍스트를 사용해 쓰기를 시작하세요.' },
   Header1: { img: header1Img, description: '섹션 제목(대)' },
   Header2: { img: header2Img, description: '섹션 제목(중)' },
@@ -27,16 +37,12 @@ const previewPopupContents: { [key: string]: PopupContent } = {
   quote: { img: quoteImg, description: '인용문을 작성하세요.' },
 };
 
-const { BackgroudColor } = themes.Color;
+export default function PreviewPopup({ $left, $top, previewType }: PreviewPopupProps) {
+  const popupContent = previewPopupContents[previewType];
+  const { img, description } = popupContent;
 
-interface PreviewPopupProps {
-  previewTagType: string;
-}
-
-export default function PreviewPopup({ previewTagType }: PreviewPopupProps) {
-  const { img, description } = previewPopupContents[previewTagType];
   return (
-    <PreviewPopupWrapper>
+    <PreviewPopupWrapper $left={$left} $top={$top}>
       {img && description && (
         <>
           <PopupImgWrapper>
@@ -51,12 +57,17 @@ export default function PreviewPopup({ previewTagType }: PreviewPopupProps) {
   );
 }
 
-const PreviewPopupWrapper = styled(PopupWrapper)`
-  background-color: black;
+const PreviewPopupWrapper = styled(PopupWrapper)<{ $left: number; $top: number }>`
+  background-color: ${PreviewBgColor};
   min-width: 150px;
   max-width: 150px;
   padding: 10px;
+  position: absolute;
+  top: ${({ $top }) => $top}px;
+  left: ${({ $left }) => $left}px;
+  z-index: 4;
 `;
+
 export const PopupImgWrapper = styled(FlexColumn)`
   justify-content: center;
   align-items: center;
