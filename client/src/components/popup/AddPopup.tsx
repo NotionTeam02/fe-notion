@@ -121,8 +121,7 @@ const SubPopupWrapper = styled(PopupWrapper)`
   min-width: 350px;
   max-width: 350px;
   position: absolute;
-  left: 10px;
-  top: 40px;
+  top: 45px;
   background-color: ${BackgroudColor};
   z-index: 1;
 `;
