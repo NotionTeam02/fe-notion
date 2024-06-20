@@ -9,8 +9,7 @@ import {
   OrderedListBlock,
 } from '../constants';
 import { ColumnGap, Flex } from '../styles/themes';
-import React, { useEffect, useLayoutEffect } from 'react';
-import { CursorPosition } from '../helpers/cursorHelpers';
+import React from 'react';
 import BlockTag from './BlockTag';
 import { useCursorStore } from '../stores/useCursorStore';
 
