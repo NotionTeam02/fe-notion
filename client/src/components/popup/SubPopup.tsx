@@ -1,31 +1,53 @@
 import styled from 'styled-components';
 import { CheckOutlined } from '@ant-design/icons';
-import { FlexColumn, FlexRow, PopupLine, PopupLineWrapper, PopupWrapper } from '../../styles/themes';
+import { FlexColumn, FlexRow, PopupLine, PopupLineWrapper, PopupWrapper, Position } from '../../styles/themes';
 import { themes } from '../../styles/themes';
 import { subPopupContents } from './AddPopup';
+import { useRef, useState } from 'react';
+import PreviewPopup from './PreviewPopup';
 
 const { BackgroudColor, WeakColor } = themes.Color;
 
-export default function SubPopup() {
-  return (
-    <SubPopupWrapper>
-      {subPopupContents.map((content) => {
-        const key = Object.keys(content)[0];
-        const { img, optionTitle } = content[key];
+interface SubPopupProps {
+  $left: number;
+}
 
-        return (
-          <PopupLineWrapper>
-            <PopupLine>
-              <FlexRow>
-                <StyledImg src={img} />
-                <Item className="optionTitle">{optionTitle}</Item>
-              </FlexRow>
-              <CheckOutlined />
-            </PopupLine>
-          </PopupLineWrapper>
-        );
-      })}
-    </SubPopupWrapper>
+export default function SubPopup({ $left = 10, usedType = 'paragraph' }) {
+  const [isShowPreviewPopup, setIsShowPreviewPopup] = useState<boolean>(false);
+  const [previewType, setPreviewType] = useState<string>('');
+  const [previewTop, setPreviewTop] = useState<number>(0);
+
+  const handlePreview = (key: string, { clientY }: React.MouseEvent) => {
+    setPreviewType(key);
+    setIsShowPreviewPopup(true);
+    setPreviewTop(clientY - 55);
+  };
+
+  const handleMouseLeave = () => {
+    setPreviewType('');
+    setIsShowPreviewPopup(false);
+  };
+
+  return (
+    <>
+      <SubPopupWrapper $left={$left}>
+        {Object.keys(subPopupContents).map((key) => {
+          const { img, optionTitle } = subPopupContents[key];
+          return (
+            <PopupLineWrapper key={`sub-popup-${key}`}>
+              <PopupLine onMouseEnter={(e) => handlePreview(key, e)} onMouseLeave={handleMouseLeave}>
+                <FlexRow>
+                  <StyledImg src={img} />
+                  <Item className="optionTitle">{optionTitle}</Item>
+                </FlexRow>
+                {key === usedType && <CheckOutlined />}
+              </PopupLine>
+            </PopupLineWrapper>
+          );
+        })}
+      </SubPopupWrapper>
+      {isShowPreviewPopup && previewType && <PreviewPopup $left={500} $top={previewTop} previewType={previewType} />}
+    </>
   );
 }
 
@@ -33,9 +55,16 @@ const Item = styled(FlexColumn)`
   justify-content: center;
   height: 100%;
 `;
-const SubPopupWrapper = styled(PopupWrapper)`
+
+const SubPopupWrapper = styled(PopupWrapper)<SubPopupProps>`
   width: 250px;
+  position: absolute;
+  top: 45px;
+  left: ${({ $left }) => $left}px;
+  background-color: ${BackgroudColor};
+  z-index: 2;
 `;
+
 const StyledImg = styled.img`
   display: block;
   object-fit: cover;

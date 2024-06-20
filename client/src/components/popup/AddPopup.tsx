@@ -12,44 +12,40 @@ import CustomPopupImage from './CustomPopupImage';
 
 const { WeakColor, BackgroudColor } = themes.Color;
 
+interface SubPopupProps {
+  $left: number;
+}
 export interface PopupContent {
   img: string;
   optionTitle: string;
   description: string;
 }
 export type PopupContentItem = { [key: string]: PopupContent };
-export const subPopupContents: PopupContentItem[] = [
-  { paragraph: { img: pragraphImg, optionTitle: '텍스트', description: '일반 텍스트를 사용해 쓰기를 시작하세요.' } },
-  { Header1: { img: header1Img, optionTitle: '제목1', description: '섹션 제목(대)' } },
-  { Header2: { img: header2Img, optionTitle: '제목2', description: '섹션 제목(중)' } },
-  { Header3: { img: header3Img, optionTitle: '제목3', description: '섹션 제목(소)' } },
-  {
-    unOrderList: {
-      img: unOrderListImg,
-      optionTitle: '글머리 기호 목록',
-      description: '간단한 글머리 기호 목록을 생성하세요.',
-    },
+export const subPopupContents: { [key: string]: PopupContent } = {
+  paragraph: { img: pragraphImg, optionTitle: '텍스트', description: '일반 텍스트를 사용해 쓰기를 시작하세요.' },
+  Header1: { img: header1Img, optionTitle: '제목1', description: '섹션 제목(대)' },
+  Header2: { img: header2Img, optionTitle: '제목2', description: '섹션 제목(중)' },
+  Header3: { img: header3Img, optionTitle: '제목3', description: '섹션 제목(소)' },
+  unOrderList: {
+    img: unOrderListImg,
+    optionTitle: '글머리 기호 목록',
+    description: '간단한 글머리 기호 목록을 생성하세요.',
   },
-  {
-    orderList: { img: orderListImg, optionTitle: '번호 매기기 목록', description: '번호가 매겨진 목록을 생성하세요.' },
-  },
-  { code: { img: codeImg, optionTitle: '코드', description: '코드 스니펫을 작성하세요.' } },
-  { quote: { img: quoteImg, optionTitle: '인용', description: '인용문을 작성하세요.' } },
-];
+  orderList: { img: orderListImg, optionTitle: '번호 매기기 목록', description: '번호가 매겨진 목록을 생성하세요.' },
+  code: { img: codeImg, optionTitle: '코드', description: '코드 스니펫을 작성하세요.' },
+  quote: { img: quoteImg, optionTitle: '인용', description: '인용문을 작성하세요.' },
+};
 
-export default function AddPopup() {
+export default function AddPopup({ $left = 40 }) {
   return (
-    <SubPopupWrapper>
+    <SubPopupWrapper $left={$left}>
       <Scroll>
         <PopupHeadLineWrapper>
           <span>기본 블록</span>
         </PopupHeadLineWrapper>
 
-        {subPopupContents.map((content) => {
-          const key = Object.keys(content)[0];
-          const value = content[key];
-          const { img, optionTitle, description } = value;
-
+        {Object.keys(subPopupContents).map((key) => {
+          const { img, optionTitle, description } = subPopupContents[key];
           return (
             <PopupLineWrapper key={key}>
               <AddPopupLine>
@@ -117,11 +113,12 @@ const PopupItemWrapper = styled(PopupImgWrapper)`
   }
 `;
 
-const SubPopupWrapper = styled(PopupWrapper)`
+const SubPopupWrapper = styled(PopupWrapper)<SubPopupProps>`
   min-width: 350px;
   max-width: 350px;
   position: absolute;
   top: 45px;
+  left: ${({ $left }) => $left}px;
   background-color: ${BackgroudColor};
-  z-index: 1;
+  z-index: 2;
 `;
