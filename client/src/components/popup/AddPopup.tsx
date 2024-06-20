@@ -9,6 +9,8 @@ import orderListImg from '../../assets/images/sub_order_list.png';
 import codeImg from '../../assets/images/sub_code.png';
 import quoteImg from '../../assets/images/sub_quote.png';
 import CustomPopupImage from './CustomPopupImage';
+import PreviewPopup from './PreviewPopup';
+import { useState } from 'react';
 
 const { WeakColor, BackgroudColor } = themes.Color;
 
@@ -37,35 +39,53 @@ export const subPopupContents: { [key: string]: PopupContent } = {
 };
 
 export default function AddPopup({ $left = 40 }) {
-  return (
-    <SubPopupWrapper $left={$left}>
-      <Scroll>
-        <PopupHeadLineWrapper>
-          <span>기본 블록</span>
-        </PopupHeadLineWrapper>
+  const [isShowPreviewPopup, setIsShowPreviewPopup] = useState<boolean>(false);
+  const [previewType, setPreviewType] = useState<string>('');
+  const [previewTop, setPreviewTop] = useState<number>(0);
 
-        {Object.keys(subPopupContents).map((key) => {
-          const { img, optionTitle, description } = subPopupContents[key];
-          return (
-            <PopupLineWrapper key={key}>
-              <AddPopupLine>
-                <FlexRow>
-                  <PopupImgWrapper>
-                    <CustomPopupImage width={46} height={46} src={img} />
-                  </PopupImgWrapper>
-                  <PopupItemWrapper>
-                    <ItemWrapper>
-                      <Item className="optionTitle">{optionTitle}</Item>
-                      <Item className="description">{description}</Item>
-                    </ItemWrapper>
-                  </PopupItemWrapper>
-                </FlexRow>
-              </AddPopupLine>
-            </PopupLineWrapper>
-          );
-        })}
-      </Scroll>
-    </SubPopupWrapper>
+  const handlePreview = (key: string, { clientY }: React.MouseEvent) => {
+    setPreviewType(key);
+    setIsShowPreviewPopup(true);
+    setPreviewTop(clientY - 55);
+  };
+
+  const handleMouseLeave = () => {
+    setPreviewType('');
+    setIsShowPreviewPopup(false);
+  };
+
+  return (
+    <>
+      <SubPopupWrapper $left={$left}>
+        <Scroll>
+          <PopupHeadLineWrapper>
+            <span>기본 블록</span>
+          </PopupHeadLineWrapper>
+
+          {Object.keys(subPopupContents).map((key) => {
+            const { img, optionTitle, description } = subPopupContents[key];
+            return (
+              <PopupLineWrapper key={key}>
+                <AddPopupLine onMouseEnter={(e) => handlePreview(key, e)} onMouseLeave={handleMouseLeave}>
+                  <FlexRow>
+                    <PopupImgWrapper>
+                      <CustomPopupImage width={46} height={46} src={img} />
+                    </PopupImgWrapper>
+                    <PopupItemWrapper>
+                      <ItemWrapper>
+                        <Item className="optionTitle">{optionTitle}</Item>
+                        <Item className="description">{description}</Item>
+                      </ItemWrapper>
+                    </PopupItemWrapper>
+                  </FlexRow>
+                </AddPopupLine>
+              </PopupLineWrapper>
+            );
+          })}
+        </Scroll>
+      </SubPopupWrapper>
+      {isShowPreviewPopup && previewType && <PreviewPopup $left={365} $top={previewTop} previewType={previewType} />}
+    </>
   );
 }
 const PopupHeadLineWrapper = styled.div`
