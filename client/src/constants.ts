@@ -1,4 +1,4 @@
-import { CursorPosition } from './helpers/cursorHelpers';
+import { MutableRefObject } from 'react';
 
 interface BlockBase {
   type: string;
@@ -39,10 +39,10 @@ export interface ImageBlock extends BlockBase {
 export type Block = HeaderBlock | ParagraphBlock | UnorderedItemBlock | OrderedListBlock | ImageBlock;
 
 export interface BlockControllerProps {
+  clientBlockRef: MutableRefObject<Block[]>;
   blocks: Block[];
   setBlocks: (blocks: Block[]) => void;
   handleFetch: (blocks: Block[], option?: boolean) => void;
-  handleContentChange: (blocks: Block[]) => void;
 }
 
 export interface TeamspaceDescription {

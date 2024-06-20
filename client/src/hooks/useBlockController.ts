@@ -41,12 +41,7 @@ const removeBlock = (blocks: Block[], blockIndex: number) => {
   return removedArray;
 };
 
-export default function useBlockController({
-  blocks,
-  setBlocks,
-  handleFetch,
-  handleContentChange,
-}: BlockControllerProps) {
+export default function useBlockController({ clientBlockRef, blocks, setBlocks, handleFetch }: BlockControllerProps) {
   const { setBlockOffset, setTextOffset } = useCursorStore();
   const { blockOffset, textOffset } = useCursorStore();
   const blockControllerRef = useRef<HTMLDivElement | null>(null);
@@ -71,6 +66,7 @@ export default function useBlockController({
       setBlocks(newBlocks);
       setBlockOffset(newBlockIndex);
       setTextOffset(Infinity);
+      clientBlockRef.current = newBlocks;
       handleFetch(newBlocks, true);
       return;
     }
@@ -81,6 +77,7 @@ export default function useBlockController({
       newBlocks = insertLineBreak(blocks, blockIndex, newOffset);
       setBlocks(newBlocks);
       setTextOffset(newTextOffset);
+      clientBlockRef.current = newBlocks;
       handleFetch(newBlocks);
       return;
     }
@@ -89,10 +86,11 @@ export default function useBlockController({
       const newBlockOffset = blockIndex + 1;
       const newTextOffset = 0;
 
-      newBlocks = addNewBlock(blocks, blockIndex);
-      setBlocks(newBlocks);
+      newBlocks = clientBlockRef.current;
+      newBlocks = addNewBlock(newBlocks, blockIndex);
       setBlockOffset(newBlockOffset);
       setTextOffset(newTextOffset);
+      clientBlockRef.current = newBlocks;
       handleFetch(newBlocks, true);
       return;
     }
@@ -108,10 +106,10 @@ export default function useBlockController({
       newBlocks[blockIndex] = { ...block, items: updatedItems } as typeof block;
     }
 
+    clientBlockRef.current = newBlocks;
     setBlockOffset(blockIndex);
     setTextOffset(newOffset);
-
-    handleContentChange(newBlocks);
+    handleFetch(newBlocks);
   };
 
   useEffect(() => {

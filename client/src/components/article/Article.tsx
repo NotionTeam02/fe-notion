@@ -4,16 +4,16 @@ import useArticle from '../../hooks/useArticle';
 import { Flex } from '../../styles/themes';
 
 export default function Article() {
-  const { blocks, setBlocks, debouncedFetch, handleContentChange } = useArticle();
+  const { clientBlocksRef, blocks, setBlocks, debouncedFetch } = useArticle();
 
   return (
     <Wrapper>
       <ContentBox>
         <BlockController
+          clientBlockRef={clientBlocksRef}
           blocks={blocks}
           setBlocks={setBlocks}
           handleFetch={debouncedFetch}
-          handleContentChange={handleContentChange}
         />
       </ContentBox>
     </Wrapper>
