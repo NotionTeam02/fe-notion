@@ -71,26 +71,16 @@ export default function useBlockController({ clientBlockRef, blocks, setBlocks, 
       return;
     }
 
-    if (key === 'Enter' && shiftKey) {
-      const newTextOffset = newOffset ? newOffset + 1 : 0;
-
-      newBlocks = insertLineBreak(blocks, blockIndex, newOffset);
-      setBlocks(newBlocks);
-      setTextOffset(newTextOffset);
-      clientBlockRef.current = newBlocks;
-      handleFetch(newBlocks);
-      return;
-    }
-
     if (key === 'Enter') {
-      const newBlockOffset = blockIndex + 1;
-      const newTextOffset = 0;
+      const newTextOffset = shiftKey ? newOffset + 1 : 0;
+      const newBlockOffset = shiftKey ? blockIndex : blockIndex + 1;
 
-      newBlocks = clientBlockRef.current;
-      newBlocks = addNewBlock(newBlocks, blockIndex);
+      newBlocks = shiftKey
+        ? insertLineBreak(clientBlockRef.current, blockIndex, newOffset)
+        : addNewBlock(clientBlockRef.current, blockIndex);
+      clientBlockRef.current = newBlocks;
       setBlockOffset(newBlockOffset);
       setTextOffset(newTextOffset);
-      clientBlockRef.current = newBlocks;
       handleFetch(newBlocks, true);
       return;
     }

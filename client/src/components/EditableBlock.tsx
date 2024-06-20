@@ -166,16 +166,9 @@ const ImageTag = ({ block: { url, alt }, index, handleInput }: EditableBlockProp
 
 export default function EditableBlock({ block, index, handleInput, showPopup }: EditableBlockProps) {
   const { type } = block;
-  // const { cursorPosition, setCursorPosition } = useCursorStore();
   const { setBlockOffset } = useCursorStore();
-  // const isFocusedBlock = index === cursorPosition.blockOffset;
   const handleFocus = (blockIndex: number) => setBlockOffset(blockIndex);
   const tagProps = { index, handleInput, handleFocus };
-
-  // useEffect(() => {
-  //   specifyPositionOfCursor({ cursorPosition, isFocusedBlock });
-  // }, [block]);
-
   const blockTag = {
     header: <HeaderTag block={block as HeaderBlock} {...tagProps} />,
     paragraph: <ParagraphTag block={block as ParagraphBlock} {...tagProps} />,
@@ -193,6 +186,6 @@ export const OrderedListIndex = styled.span`
 
 export const StyledBlockTag = styled.div`
   width: 100%;
-  white-space: pre-wrap; /* 줄 바꿈과 공백을 그대로 렌더링 */
+  white-space: pre-wrap;
   word-break: break-word;
 `;
