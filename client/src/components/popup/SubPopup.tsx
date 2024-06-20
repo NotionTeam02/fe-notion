@@ -11,8 +11,7 @@ export default function SubPopup() {
     <SubPopupWrapper>
       {subPopupContents.map((content) => {
         const key = Object.keys(content)[0];
-        const value = content[key];
-        const { img, optionTitle } = value;
+        const { img, optionTitle } = content[key];
 
         return (
           <PopupLineWrapper>
