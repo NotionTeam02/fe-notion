@@ -76,7 +76,7 @@ const ParagraphTag = ({
       contentEditable
       suppressContentEditableWarning
       onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index })}
-      onKeyDown={stopEnterDefaultEvent}
+      onKeyDown={(e) => stopEnterDefaultEvent(e)}
       onFocus={() => handleFocus(index)}
       style={{ backgroundColor: 'aliceblue' }}
     >
