@@ -60,7 +60,6 @@ export default function EditPopup() {
 
 const EditPopupWrapper = styled(PopupWrapper)`
   position: absolute;
-  top: 0px;
   background-color: ${BackgroudColor};
   z-index: 1;
 `;

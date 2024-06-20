@@ -17,10 +17,10 @@ export default function SubPopup({ $left = 10, usedType = 'paragraph' }) {
   const [previewType, setPreviewType] = useState<string>('');
   const [previewTop, setPreviewTop] = useState<number>(0);
 
-  const handlePreview = (key: string, { clientY }: React.MouseEvent) => {
+  const handlePreview = (key: string, index: number) => {
     setPreviewType(key);
     setIsShowPreviewPopup(true);
-    setPreviewTop(clientY - 55);
+    setPreviewTop(index * 36 + 36);
   };
 
   const handleMouseLeave = () => {
@@ -31,11 +31,11 @@ export default function SubPopup({ $left = 10, usedType = 'paragraph' }) {
   return (
     <>
       <SubPopupWrapper $left={$left}>
-        {Object.keys(subPopupContents).map((key) => {
+        {Object.keys(subPopupContents).map((key, index) => {
           const { img, optionTitle } = subPopupContents[key];
           return (
             <PopupLineWrapper key={`sub-popup-${key}`}>
-              <PopupLine onMouseEnter={(e) => handlePreview(key, e)} onMouseLeave={handleMouseLeave}>
+              <PopupLine onMouseEnter={() => handlePreview(key, index)} onMouseLeave={handleMouseLeave}>
                 <FlexRow>
                   <StyledImg src={img} />
                   <Item className="optionTitle">{optionTitle}</Item>
