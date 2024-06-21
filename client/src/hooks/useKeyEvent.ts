@@ -3,7 +3,7 @@ import { Block, ParagraphBlock } from '@/constants';
 import { generateRange } from '@/helpers/cursorHelpers';
 import { handleBackspace } from '@/helpers/keyEventHelpers';
 import { useCursorStore } from '@/stores/useCursorStore';
-import { Dispatch, MutableRefObject } from 'react';
+import { MutableRefObject } from 'react';
 
 interface KeyEventHookProps {
   blocks: Block[];
