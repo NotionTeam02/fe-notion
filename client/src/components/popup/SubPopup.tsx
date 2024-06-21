@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { CheckOutlined } from '@ant-design/icons';
-import { FlexColumn, FlexRow, PopupLine, PopupLineWrapper, PopupWrapper, Position } from '../../styles/themes';
-import { themes } from '../../styles/themes';
+import { FlexColumn, FlexRow, PopupLine, PopupLineWrapper, PopupWrapper } from '@/styles/themes';
+import { themes } from '@/styles/themes';
 import { subPopupContents } from './AddPopup';
-import { useRef, useState } from 'react';
 import PreviewPopup from './PreviewPopup';
+import { useState } from 'react';
 
 const { BackgroudColor, WeakColor } = themes.Color;
 

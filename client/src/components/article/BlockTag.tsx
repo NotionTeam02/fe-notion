@@ -1,7 +1,7 @@
 import { HolderOutlined, PlusOutlined } from '@ant-design/icons';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FlexRow } from '../../styles/themes';
+import { FlexRow, Position } from '../../styles/themes';
 import AddPopup from '../popup/AddPopup';
 import EditPopup from '../popup/EditPopup';
 
@@ -55,14 +55,14 @@ export default function BlockTag({ contentTag }: { contentTag: ReactNode }) {
         {contentTag}
       </BlockWrapper>
       {isShowSubPopup.plus && (
-        <div ref={popupRef}>
+        <Position ref={popupRef}>
           <AddPopup />
-        </div>
+        </Position>
       )}
       {isShowSubPopup.edit && (
-        <div ref={popupRef}>
+        <Position ref={popupRef}>
           <EditPopup />
-        </div>
+        </Position>
       )}
     </>
   );
@@ -77,7 +77,6 @@ const Icons = styled(FlexRow)`
   cursor: pointer;
   position: relative;
   transition: all;
-  position: relative;
 `;
 
 const IconWrapper = styled.div`

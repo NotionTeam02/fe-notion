@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import themes, { PopupWrapper, PopupLineWrapper, PopupLine, Position } from '../../styles/themes';
+import themes, { PopupWrapper, PopupLineWrapper, PopupLine, Position } from '@/styles/themes';
 import { CommentOutlined, StarFilled, DeleteOutlined, RetweetOutlined, RightOutlined } from '@ant-design/icons';
 import { useRef, useState } from 'react';
 import AddPopup from './AddPopup';
