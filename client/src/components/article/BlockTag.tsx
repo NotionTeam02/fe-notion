@@ -12,12 +12,8 @@ export default function BlockTag({ contentTag }: { contentTag: ReactNode }) {
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   const popupType: { [key: string]: () => void } = {
-    edit: () => {
-      showEditPopup();
-    },
-    plus: () => {
-      showPlusPopup();
-    },
+    edit: showEditPopup,
+    plus: showPlusPopup,
   };
 
   type PopupTypeKey = keyof typeof popupType;
