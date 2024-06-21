@@ -28,24 +28,25 @@ export default function SubPopup({ $left = 10, usedType = 'paragraph' }) {
     setIsShowPreviewPopup(false);
   };
 
+  const getSubPopupContents = () =>
+    Object.keys(subPopupContents).map((key, index) => {
+      const { img, optionTitle } = subPopupContents[key];
+      return (
+        <PopupLineWrapper key={`sub-popup-${key}`}>
+          <PopupLine onMouseEnter={() => handlePreview(key, index)} onMouseLeave={handleMouseLeave}>
+            <FlexRow>
+              <StyledImg src={img} />
+              <Item className="optionTitle">{optionTitle}</Item>
+            </FlexRow>
+            {key === usedType && <CheckOutlined />}
+          </PopupLine>
+        </PopupLineWrapper>
+      );
+    });
+
   return (
     <>
-      <SubPopupWrapper $left={$left}>
-        {Object.keys(subPopupContents).map((key, index) => {
-          const { img, optionTitle } = subPopupContents[key];
-          return (
-            <PopupLineWrapper key={`sub-popup-${key}`}>
-              <PopupLine onMouseEnter={() => handlePreview(key, index)} onMouseLeave={handleMouseLeave}>
-                <FlexRow>
-                  <StyledImg src={img} />
-                  <Item className="optionTitle">{optionTitle}</Item>
-                </FlexRow>
-                {key === usedType && <CheckOutlined />}
-              </PopupLine>
-            </PopupLineWrapper>
-          );
-        })}
-      </SubPopupWrapper>
+      <SubPopupWrapper $left={$left}>{getSubPopupContents()}</SubPopupWrapper>
       {isShowPreviewPopup && previewType && <PreviewPopup $left={500} $top={previewTop} previewType={previewType} />}
     </>
   );
