@@ -12,10 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Set up Node.js path
+        run: echo "PATH=$PATH:/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_ENV
 
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.5.3
