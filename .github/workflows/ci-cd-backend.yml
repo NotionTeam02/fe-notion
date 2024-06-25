@@ -28,4 +28,4 @@ jobs:
 
       - name: SSH to EC2 and deploy
         run: |
-          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.EC2_INSTANCE }} 'bash -s' < deploy_script.sh
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_INSTANCE }} 'bash -s' < deploy_script.sh
