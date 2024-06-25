@@ -19,4 +19,4 @@ jobs:
 
       - name: SSH to EC2 and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_rsa ${{ secrets.EC2_INSTANCE }} 'bash -s' < deploy_script.sh
+          ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.EC2_INSTANCE }} 'bash -s' < deploy_script.sh
