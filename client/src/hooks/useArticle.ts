@@ -4,7 +4,7 @@ import { sendArticleRequestById, updateArticleRequestById } from '../api/article
 import { io } from 'socket.io-client';
 import { debounce } from '../utils/timeoutUtils';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 const SERVER = import.meta.env.VITE_SERVER;
 
@@ -20,10 +20,6 @@ export default function useArticle() {
       return response.content;
     },
     refetchOnWindowFocus: false,
-  });
-
-  const { mutate: updateArticle } = useMutation({
-    mutationFn: updateArticleRequestById,
   });
 
   useEffect(() => {

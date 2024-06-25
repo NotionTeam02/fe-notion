@@ -45,10 +45,6 @@ const Wrapper = styled(FlexColumn)`
   gap: 14px;
 `;
 
-const ErrorText = styled.span`
-  color: red;
-`;
-
 const NicknameInput = styled.input`
   ${BoxBackground}
   ${BoxBorder}

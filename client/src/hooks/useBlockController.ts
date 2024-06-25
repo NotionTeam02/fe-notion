@@ -12,7 +12,7 @@ export const removeBlock = (blocks: Block[], blockIndex: number) => {
 };
 
 export default function useBlockController({ clientBlockRef, blocks, setBlocks, handleFetch }: BlockControllerProps) {
-  const { blockOffset, setBlockOffset, textOffset, setTextOffset } = useCursorStore();
+  const { blockOffset, textOffset } = useCursorStore();
   const blockControllerRef = useRef<HTMLDivElement | null>(null);
   const { handleInput } = useKeyEvent({ blocks, setBlocks, clientBlockRef, handleFetch });
 

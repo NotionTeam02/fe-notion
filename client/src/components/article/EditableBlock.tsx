@@ -163,7 +163,7 @@ const ImageTag = ({ block: { url, alt }, index, handleInput }: EditableBlockProp
   </div>
 );
 
-export default function EditableBlock({ block, index, handleInput, showPopup }: EditableBlockProps) {
+export default function EditableBlock({ block, index, handleInput }: EditableBlockProps) {
   const { type } = block;
   const { setBlockOffset } = useCursorStore();
   const handleFocus = (blockIndex: number) => setBlockOffset(blockIndex);

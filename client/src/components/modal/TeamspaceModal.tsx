@@ -13,7 +13,7 @@ import { message } from 'antd';
 
 export default function TeamspaceModal() {
   const client = useQueryClient();
-  const { userId, isLoggedIn } = useUserStore();
+  const { isLoggedIn } = useUserStore();
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const navigate = useNavigate();
 
