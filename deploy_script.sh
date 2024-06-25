@@ -1,3 +1,4 @@
+export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
 echo "Checking installed versions..."
 node -v
 npm -v
