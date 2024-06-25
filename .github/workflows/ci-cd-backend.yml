@@ -19,7 +19,7 @@ jobs:
 
       - name: Test SSH port
         run: |
-          nc -zv ${{ secrets.EC2_INSTANCE }} 22
+          nc -zv ${{ secrets.EC2_DOMAIN }} 22
 
       - name: SSH to EC2 and deploy
         run: |
