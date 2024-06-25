@@ -1,0 +1,22 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: ['main', 'dev']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH to EC2 and deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_rsa ${{ secrets.EC2_INSTANCE }} 'bash -s' < deploy_script.sh

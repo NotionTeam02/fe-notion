@@ -1,0 +1,6 @@
+git clone https://github.com/NotionTeam02/fe-notion.git
+cd fe-notion/server
+git checkout dev
+npm install
+npx tsc
+node dist/index.js
