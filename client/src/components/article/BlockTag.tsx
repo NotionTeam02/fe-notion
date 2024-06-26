@@ -1,14 +1,30 @@
 import { HolderOutlined, PlusOutlined } from '@ant-design/icons';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FlexRow, Position } from '../../styles/themes';
 import AddPopup from '../popup/AddPopup';
 import EditPopup from '../popup/EditPopup';
 
-export default function BlockTag({ contentTag }: { contentTag: ReactNode }) {
+export default function BlockTag({
+  contentTagRef,
+  contentTag,
+}: {
+  contentTagRef: MutableRefObject<HTMLDivElement | null>;
+  contentTag: ReactNode;
+}) {
   const [isShowSubPopup, setIsShowSubPopup] = useState({ edit: false, plus: false });
   const showEditPopup = () => setIsShowSubPopup((prev) => ({ ...prev, edit: !prev.edit }));
-  const showPlusPopup = () => setIsShowSubPopup((prev) => ({ ...prev, plus: !prev.plus }));
+  const showPlusPopup = () => {
+    setIsShowSubPopup((prev) => ({ ...prev, plus: !prev.plus }));
+    if (contentTagRef.current) {
+      const event = new KeyboardEvent('keyup', {
+        key: 'Enter',
+        bubbles: true,
+        cancelable: true,
+      });
+      contentTagRef.current.dispatchEvent(event);
+    }
+  };
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   const popupType: { [key: string]: () => void } = {
@@ -21,6 +37,7 @@ export default function BlockTag({ contentTag }: { contentTag: ReactNode }) {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.currentTarget as HTMLElement;
     const type = target.getAttribute('data-attr-type');
+
     if (!type || !(type in popupType)) return;
     popupType[type as PopupTypeKey]();
   };
