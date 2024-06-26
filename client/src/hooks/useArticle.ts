@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import { debounce } from '../utils/timeoutUtils';
 import { useParams } from 'react-router-dom';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useUpdateArticleMutation } from './mutationHooks';
 
 const SERVER = import.meta.env.VITE_SERVER;
 
@@ -21,6 +22,8 @@ export default function useArticle() {
     },
     refetchOnWindowFocus: false,
   });
+
+  const { updateArticle } = useUpdateArticleMutation();
 
   useEffect(() => {
     const socket = io(SERVER);
