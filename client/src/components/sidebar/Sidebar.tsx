@@ -1,12 +1,11 @@
 import { AppstoreOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { themes, ColumnGap, SideMenu } from '../../styles/themes';
-import UserStatus from './UserStatus';
-import Teamspace from './Teamspace';
 import { TeamspaceDescription, UserDescription } from '../../constants';
 import { useParams } from 'react-router-dom';
 import { sendTeamspaceRequestById } from '../../api/teamspaceAPI';
 import { useSuspenseQuery } from '@tanstack/react-query';
+import Teamspace from './Teamspace';
 
 export interface SidebarProps {
   teamspace: TeamspaceDescription;

@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import themes, { FlexColumn, FlexRow, PopupLine, PopupLineWrapper, PopupWrapper } from '../../styles/themes';
-import pragraphImg from '../../assets/images/sub_pragraph.png';
-import header1Img from '../../assets/images/sub_header1.png';
-import header2Img from '../../assets/images/sub_header2.png';
-import header3Img from '../../assets/images/sub_header3.png';
-import unOrderListImg from '../../assets/images/sub_unorder_list.png';
-import orderListImg from '../../assets/images/sub_order_list.png';
-import codeImg from '../../assets/images/sub_code.png';
-import quoteImg from '../../assets/images/sub_quote.png';
+import themes, { FlexColumn, FlexRow, PopupLine, PopupLineWrapper, PopupWrapper } from '@/styles/themes';
+import pragraphImg from '@/assets/images/sub_pragraph.png';
+import header1Img from '@/assets/images/sub_header1.png';
+import header2Img from '@/assets/images/sub_header2.png';
+import header3Img from '@/assets/images/sub_header3.png';
+import unOrderListImg from '@/assets/images/sub_unorder_list.png';
+import orderListImg from '@/assets/images/sub_order_list.png';
+import codeImg from '@/assets/images/sub_code.png';
+import quoteImg from '@/assets/images/sub_quote.png';
 import CustomPopupImage from './CustomPopupImage';
 import PreviewPopup from './PreviewPopup';
 import { useState } from 'react';
@@ -54,6 +54,28 @@ export default function AddPopup({ $left = 40 }) {
     setIsShowPreviewPopup(false);
   };
 
+  const getAddPopupContents = () =>
+    Object.keys(subPopupContents).map((key) => {
+      const { img, optionTitle, description } = subPopupContents[key];
+      return (
+        <PopupLineWrapper key={key}>
+          <AddPopupLine onMouseEnter={(e) => handlePreview(key, e)} onMouseLeave={handleMouseLeave}>
+            <FlexRow>
+              <PopupImgWrapper>
+                <CustomPopupImage width={46} height={46} src={img} />
+              </PopupImgWrapper>
+              <PopupItemWrapper>
+                <ItemWrapper>
+                  <Item className="optionTitle">{optionTitle}</Item>
+                  <Item className="description">{description}</Item>
+                </ItemWrapper>
+              </PopupItemWrapper>
+            </FlexRow>
+          </AddPopupLine>
+        </PopupLineWrapper>
+      );
+    });
+
   return (
     <>
       <SubPopupWrapper $left={$left}>
@@ -61,27 +83,7 @@ export default function AddPopup({ $left = 40 }) {
           <PopupHeadLineWrapper>
             <span>기본 블록</span>
           </PopupHeadLineWrapper>
-
-          {Object.keys(subPopupContents).map((key) => {
-            const { img, optionTitle, description } = subPopupContents[key];
-            return (
-              <PopupLineWrapper key={key}>
-                <AddPopupLine onMouseEnter={(e) => handlePreview(key, e)} onMouseLeave={handleMouseLeave}>
-                  <FlexRow>
-                    <PopupImgWrapper>
-                      <CustomPopupImage width={46} height={46} src={img} />
-                    </PopupImgWrapper>
-                    <PopupItemWrapper>
-                      <ItemWrapper>
-                        <Item className="optionTitle">{optionTitle}</Item>
-                        <Item className="description">{description}</Item>
-                      </ItemWrapper>
-                    </PopupItemWrapper>
-                  </FlexRow>
-                </AddPopupLine>
-              </PopupLineWrapper>
-            );
-          })}
+          {getAddPopupContents()}
         </Scroll>
       </SubPopupWrapper>
       {isShowPreviewPopup && previewType && <PreviewPopup $left={365} $top={previewTop} previewType={previewType} />}

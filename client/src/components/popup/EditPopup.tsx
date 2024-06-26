@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import themes, { PopupWrapper, PopupLineWrapper, PopupLine, Position } from '../../styles/themes';
+import themes, { PopupWrapper, PopupLineWrapper, PopupLine, Position } from '@/styles/themes';
 import { CommentOutlined, StarFilled, DeleteOutlined, RetweetOutlined, RightOutlined } from '@ant-design/icons';
 import { useRef, useState } from 'react';
-import AddPopup from './AddPopup';
 import SubPopup from './SubPopup';
 
 const { BackgroudColor } = themes.Color;
@@ -60,7 +59,6 @@ export default function EditPopup() {
 
 const EditPopupWrapper = styled(PopupWrapper)`
   position: absolute;
-  top: 0px;
   background-color: ${BackgroudColor};
   z-index: 1;
 `;
