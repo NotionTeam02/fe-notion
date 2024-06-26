@@ -15,23 +15,10 @@ jobs:
       - name: Set up Node.js path
         run: echo "PATH=/home/linuxbrew/.linuxbrew/bin:$PATH" >> $GITHUB_ENV
 
-      - name: Set MONGO_DB_URL Environment Variable
-        run: echo "MONGO_DB_URL=${{ secrets.MONGO_DB_URL }}" >> $GITHUB_ENV
-
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Check Node.js path
-        run: |
-          echo "Current PATH: $PATH"
-          which node
-          which npm
-
-      - name: Test SSH port
-        run: |
-          nc -zv ${{ secrets.EC2_DOMAIN }} 22
 
       - name: SSH to EC2 and deploy
         run: |
