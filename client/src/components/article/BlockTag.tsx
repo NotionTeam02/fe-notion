@@ -7,15 +7,27 @@ import EditPopup from '../popup/EditPopup';
 
 export default function BlockTag({
   contentTagRef,
+  plusIconRef,
   contentTag,
 }: {
   contentTagRef: MutableRefObject<HTMLDivElement | null>;
+  plusIconRef: MutableRefObject<HTMLDivElement | null>;
   contentTag: ReactNode;
 }) {
+  const eventRef = useRef<KeyboardEvent | null>(null);
   const [isShowSubPopup, setIsShowSubPopup] = useState({ edit: false, plus: false });
+  const [isSlash, setIsSlash] = useState<boolean>(false);
   const showEditPopup = () => setIsShowSubPopup((prev) => ({ ...prev, edit: !prev.edit }));
   const showPlusPopup = () => {
     setIsShowSubPopup((prev) => ({ ...prev, plus: !prev.plus }));
+    setIsSlash(false);
+
+    if (eventRef.current?.key === '/') {
+      setIsSlash(true);
+      eventRef.current = null;
+      return;
+    }
+
     if (contentTagRef.current) {
       const event = new KeyboardEvent('keyup', {
         key: 'Enter',
@@ -54,6 +66,19 @@ export default function BlockTag({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleEventByType = (e: KeyboardEvent) => (eventRef.current = e);
+
+  useEffect(() => {
+    const currentContentTag = contentTagRef.current;
+    if (currentContentTag) {
+      currentContentTag.addEventListener('keyup', handleEventByType);
+
+      return () => {
+        currentContentTag.removeEventListener('keyup', handleEventByType);
+      };
+    }
+  }, []);
+
   return (
     <>
       <BlockWrapper>
@@ -61,7 +86,7 @@ export default function BlockTag({
           <IconWrapper data-attr-type="edit" onClick={handleClick}>
             <HolderOutlined />
           </IconWrapper>
-          <IconWrapper data-attr-type="plus" onClick={handleClick}>
+          <IconWrapper data-attr-type="plus" onClick={handleClick} ref={plusIconRef}>
             <PlusOutlined />
           </IconWrapper>
         </Icons>
@@ -69,7 +94,7 @@ export default function BlockTag({
       </BlockWrapper>
       {isShowSubPopup.plus && (
         <Position ref={popupRef}>
-          <AddPopup />
+          <AddPopup isSlash={isSlash} />
         </Position>
       )}
       {isShowSubPopup.edit && (

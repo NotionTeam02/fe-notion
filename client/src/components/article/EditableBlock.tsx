@@ -50,20 +50,28 @@ const HeaderTag = ({
 }: TagProps & { block: HeaderBlock }) => {
   const contentTagRef = useRef<HTMLDivElement | null>(null);
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const plusIconRef = useRef<HTMLDivElement | null>(null);
+  const handleInputWrapper = (props: { e: React.KeyboardEvent<HTMLElement>; index: number }) => {
+    if (props.e.key === '/') {
+      plusIconRef.current?.click();
+    }
+    handleInput(props);
+  };
+
   const contentTag = createElement(
     Tag,
     {
       ref: contentTagRef,
       contentEditable: true,
       suppressContentEditableWarning: true,
-      onKeyUp: (e: React.KeyboardEvent<HTMLElement>) => handleInput({ e, index }),
+      onKeyUp: (e: React.KeyboardEvent<HTMLElement>) => handleInputWrapper({ e, index }),
       onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => stopEnterDefaultEvent(e),
       onFocus: () => handleFocus(index),
     },
     content
   );
 
-  return <BlockTag {...{ contentTagRef, contentTag }} />;
+  return <BlockTag {...{ contentTagRef, plusIconRef, contentTag }} />;
 };
 
 const ParagraphTag = ({
@@ -73,12 +81,21 @@ const ParagraphTag = ({
   handleFocus,
 }: TagProps & { block: ParagraphBlock }) => {
   const contentTagRef = useRef<HTMLDivElement | null>(null);
+  const plusIconRef = useRef<HTMLDivElement | null>(null);
+  const handleInputWrapper = (props: { e: React.KeyboardEvent<HTMLElement>; index: number }) => {
+    if (props.e.key === '/') {
+      plusIconRef.current?.click();
+      return;
+    }
+    handleInput(props);
+  };
+
   const contentTag = (
     <StyledBlockTag
       ref={contentTagRef}
       contentEditable
       suppressContentEditableWarning
-      onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index })}
+      onKeyUp={(e) => handleInputWrapper({ e: e as React.KeyboardEvent<HTMLElement>, index })}
       onKeyDown={(e) => stopEnterDefaultEvent(e)}
       onFocus={() => handleFocus(index)}
       style={{ backgroundColor: 'aliceblue' }}
@@ -87,7 +104,7 @@ const ParagraphTag = ({
     </StyledBlockTag>
   );
 
-  return <BlockTag contentTagRef={contentTagRef} {...{ contentTag }} />;
+  return <BlockTag {...{ contentTagRef, plusIconRef, contentTag }} />;
 };
 
 const UnorderedItemTag = ({
@@ -97,6 +114,13 @@ const UnorderedItemTag = ({
   handleFocus,
 }: TagProps & { block: UnorderedItemBlock }) => {
   const contentTagRef = useRef<HTMLDivElement | null>(null);
+  const plusIconRef = useRef<HTMLDivElement | null>(null);
+  const handleInputWrapper = (props: { e: React.KeyboardEvent<HTMLElement>; index: number }) => {
+    if (props.e.key === '/') {
+      plusIconRef.current?.click();
+    }
+    handleInput(props);
+  };
   const contentTag = (
     <Flex>
       <OrderedListIndex>•</OrderedListIndex>
@@ -104,7 +128,7 @@ const UnorderedItemTag = ({
         ref={contentTagRef}
         contentEditable
         suppressContentEditableWarning
-        onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index })}
+        onKeyUp={(e) => handleInputWrapper({ e: e as React.KeyboardEvent<HTMLElement>, index })}
         onKeyDown={(e) => stopEnterDefaultEvent(e)}
         onFocus={() => handleFocus(index)}
       >
@@ -113,7 +137,7 @@ const UnorderedItemTag = ({
     </Flex>
   );
 
-  return <BlockTag {...{ contentTagRef, contentTag }} />;
+  return <BlockTag {...{ contentTagRef, plusIconRef, contentTag }} />;
 };
 
 const OrderedListTag = ({
@@ -139,6 +163,15 @@ const OrderedListTag = ({
 
 const OrderedItemTag = ({ item, itemIndex, index, handleInput, handleFocus }: OrderedItemTagProps) => {
   const contentTagRef = useRef<HTMLDivElement | null>(null);
+  const plusIconRef = useRef<HTMLDivElement | null>(null);
+
+  const handleInputWrapper = (props: { e: React.KeyboardEvent<HTMLElement>; index: number; itemIndex: number }) => {
+    // if (props.e.key === '/') {
+    //   plusIconRef.current?.click();
+    // }
+    handleInput(props);
+  };
+
   const contentTag = (
     <Flex>
       <OrderedListIndex>{`${itemIndex + 1}.`}</OrderedListIndex>
@@ -147,7 +180,7 @@ const OrderedItemTag = ({ item, itemIndex, index, handleInput, handleFocus }: Or
         key={`ol-${index}-${itemIndex}`}
         contentEditable
         suppressContentEditableWarning
-        onKeyUp={(e) => handleInput({ e: e as React.KeyboardEvent<HTMLElement>, index, itemIndex })}
+        onKeyUp={(e) => handleInputWrapper({ e: e as React.KeyboardEvent<HTMLElement>, index, itemIndex })}
         onKeyDown={(e) => stopEnterDefaultEvent(e)}
         onFocus={() => handleFocus(index)}
       >
@@ -155,7 +188,7 @@ const OrderedItemTag = ({ item, itemIndex, index, handleInput, handleFocus }: Or
       </div>
     </Flex>
   );
-  return <BlockTag {...{ contentTagRef, contentTag }} />;
+  return <BlockTag {...{ contentTagRef, plusIconRef, contentTag }} />;
 };
 
 const ImageTag = ({ block: { url, alt }, index, handleInput }: EditableBlockProps & { block: ImageBlock }) => (
