@@ -15,6 +15,9 @@ jobs:
       - name: Set up Node.js path
         run: echo "PATH=/home/linuxbrew/.linuxbrew/bin:$PATH" >> $GITHUB_ENV
 
+      - name: Set MONGO_DB_URL Environment Variable
+        run: echo "MONGO_DB_URL=${{ secrets.MONGO_DB_URL }}" >> $GITHUB_ENV
+
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -32,4 +35,4 @@ jobs:
 
       - name: SSH to EC2 and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_INSTANCE }} 'bash -s' < deploy_script.sh
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_INSTANCE }} "MONGO_DB_URL='${MONGO_DB_URL}' bash -s" < deploy_script.sh
