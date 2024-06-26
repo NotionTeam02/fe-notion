@@ -98,18 +98,14 @@ articleRouter.get('/:articleId', async (req: Request, res: Response) => {
 articleRouter.post('/', async (req: Request, res: Response) => {
   try {
     const { teamspaceId } = req.params;
-    const { title, content } = req.body;
-
-    if (!title || !content) {
-      return res.status(400).json({ message: 'Title and content are required' });
-    }
 
     const teamspace = await Teamspace.findOne({ _id: teamspaceId });
     if (!teamspace) {
       return res.status(404).json({ message: 'Teamspace not found' });
     }
 
-    const newArticle = new Article({ title, content });
+    const defaultBlock = { type: 'paragraph', content: '내용 없음' };
+    const newArticle = new Article({ title: '제목 없음', content: [defaultBlock] });
     await newArticle.save();
 
     teamspace.articles.push(newArticle._id);
