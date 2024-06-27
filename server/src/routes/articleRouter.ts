@@ -162,7 +162,7 @@ articleRouter.post('/', async (req: Request, res: Response) => {
 articleRouter.patch('/:articleId', async (req: Request, res: Response) => {
   try {
     const { teamspaceId, articleId } = req.params;
-    const { content } = req.body;
+    const { title, content } = req.body;
 
     const teamspace = await Teamspace.findOne({ _id: teamspaceId }).populate('articles');
     if (!teamspace) {
@@ -175,6 +175,7 @@ articleRouter.patch('/:articleId', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Article not found' });
     }
 
+    article.title = title || article.title;
     article.content = content || article.content;
     article.updatedAt = Date.now().toString();
     await teamspace.save();
