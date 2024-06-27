@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Artilce, Block } from '../constants';
+import { Article, Block } from '../constants';
 import { sendArticleRequestById } from '../api/articleAPI';
 import { io } from 'socket.io-client';
 import { debounce } from '../utils/timeoutUtils';
@@ -14,7 +14,7 @@ export default function useArticle() {
   const { teamspaceId, articleId } = useParams();
   const client = useQueryClient();
 
-  const { data: article } = useSuspenseQuery<Artilce>({
+  const { data: article } = useSuspenseQuery<Article>({
     queryKey: ['article', `${articleId}`],
     queryFn: async () => {
       const response = await sendArticleRequestById({ teamspaceId, articleId });

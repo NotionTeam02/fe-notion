@@ -45,7 +45,7 @@ export interface BlockControllerProps {
   handleFetch: (blocks: Block[], option?: boolean) => void;
 }
 
-export interface Artilce {
+export interface Article {
   _id: string;
   title: string;
   content: Block[];
