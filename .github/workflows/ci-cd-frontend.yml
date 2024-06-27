@@ -33,11 +33,7 @@ jobs:
         run: CI=false npm run build
         working-directory: ./client
         env:
-          VITE_APP_SERVER: ${{ secrets.VITE_APP_SERVER }}
-          VITE_APP_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-          VITE_APP_REGION: ${{ secrets.S3_REGION }}
-          VITE_APP_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-          VITE_APP_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          VITE_SERVER: ${{ secrets.VITE_APP_SERVER }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
