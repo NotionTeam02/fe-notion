@@ -12,7 +12,7 @@ interface DraggingBoxProps {
 }
 
 export default function Article() {
-  const { clientBlocksRef, blocks, setBlocks, debouncedFetch } = useArticle();
+  const { title = '', clientBlocksRef, blocks, setBlocks, debouncedFetch } = useArticle();
   const [isDragging, setIsDragging] = useState(false);
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
@@ -32,6 +32,7 @@ export default function Article() {
   return (
     <Wrapper onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <ContentBox>
+        <Title>{title}</Title>
         <BlockController
           clientBlockRef={clientBlocksRef}
           blocks={blocks}
@@ -58,13 +59,20 @@ const Wrapper = styled(Flex)`
   width: calc(100vw - 240px);
   height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   transition: all 0.3s ease-in-out 0.5s;
+`;
+
+const Title = styled.h1`
+  margin-left: 40px;
+  text-align: left;
 `;
 
 const ContentBox = styled.div`
   width: 708px;
   display: flex;
+  flex-direction: column;
 `;
 
 const DraggingBox = styled.div<DraggingBoxProps>`

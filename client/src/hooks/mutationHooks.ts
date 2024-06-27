@@ -53,10 +53,9 @@ export const useNewArticleMutation = ({ successFn }: { successFn: () => void }) 
   return { fetchNewArticle };
 };
 
-export const useUpdateArticleMutation = ({ successFn }: { successFn: () => void }) => {
+export const useUpdateArticleMutation = () => {
   const { mutate: updateArticle } = useMutation({
     mutationFn: updateArticleRequestById,
-    onSuccess: successFn,
     onError: ({ message: errorMessage }) => message.warning(errorMessage),
   });
 

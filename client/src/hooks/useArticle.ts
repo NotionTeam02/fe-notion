@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Block } from '../constants';
+import { Artilce, Block } from '../constants';
 import { sendArticleRequestById } from '../api/articleAPI';
 import { io } from 'socket.io-client';
 import { debounce } from '../utils/timeoutUtils';
@@ -14,26 +14,24 @@ export default function useArticle() {
   const { teamspaceId, articleId } = useParams();
   const client = useQueryClient();
 
-  const { data: blocks = [] } = useSuspenseQuery<Block[]>({
+  const { data: article } = useSuspenseQuery<Artilce>({
     queryKey: ['article', `${articleId}`],
     queryFn: async () => {
       const response = await sendArticleRequestById({ teamspaceId, articleId });
       const { content } = response;
       clientBlocksRef.current = content;
 
-      return content;
+      return response;
     },
     refetchOnWindowFocus: false,
   });
 
-  const successFn = () => {};
-
-  const { updateArticle } = useUpdateArticleMutation({ successFn });
+  const { updateArticle } = useUpdateArticleMutation();
 
   useEffect(() => {
     const socket = io(SERVER);
 
-    socket.on(`article-${articleId}`, ({ content }) => client.setQueryData(['article', `${articleId}`], content));
+    socket.on(`article-${articleId}`, () => client.invalidateQueries({ queryKey: ['article', `${articleId}`] }));
 
     return () => {
       socket.off(`article-${articleId}`);
@@ -52,8 +50,9 @@ export default function useArticle() {
   );
 
   return {
+    title: article.title,
     clientBlocksRef,
-    blocks,
+    blocks: article.content,
     setBlocks: (newBlocks: Block[]) => (clientBlocksRef.current = newBlocks),
     debouncedFetch,
   };
