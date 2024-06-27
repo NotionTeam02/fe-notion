@@ -99,7 +99,7 @@ export default function BlockTag({
       )}
       {isShowSubPopup.edit && (
         <Position ref={popupRef}>
-          <EditPopup />
+          <EditPopup {...{ contentTagRef }} />
         </Position>
       )}
     </>
