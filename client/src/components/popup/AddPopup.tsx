@@ -14,8 +14,9 @@ import { useState } from 'react';
 
 const { WeakColor, BackgroudColor } = themes.Color;
 
-interface SubPopupProps {
+interface AddPopupProps {
   $left: number;
+  isSlash: boolean;
 }
 export interface PopupContent {
   img: string;
@@ -38,7 +39,7 @@ export const subPopupContents: { [key: string]: PopupContent } = {
   quote: { img: quoteImg, optionTitle: '인용', description: '인용문을 작성하세요.' },
 };
 
-export default function AddPopup({ $left = 40 }) {
+export default function AddPopup({ $left = 40, isSlash = false }) {
   const [isShowPreviewPopup, setIsShowPreviewPopup] = useState<boolean>(false);
   const [previewType, setPreviewType] = useState<string>('');
   const [previewTop, setPreviewTop] = useState<number>(0);
@@ -78,14 +79,14 @@ export default function AddPopup({ $left = 40 }) {
 
   return (
     <>
-      <SubPopupWrapper $left={$left}>
+      <AddPopupWrapper $left={$left} isSlash={isSlash}>
         <Scroll>
           <PopupHeadLineWrapper>
             <span>기본 블록</span>
           </PopupHeadLineWrapper>
           {getAddPopupContents()}
         </Scroll>
-      </SubPopupWrapper>
+      </AddPopupWrapper>
       {isShowPreviewPopup && previewType && <PreviewPopup $left={365} $top={previewTop} previewType={previewType} />}
     </>
   );
@@ -135,11 +136,11 @@ const PopupItemWrapper = styled(PopupImgWrapper)`
   }
 `;
 
-const SubPopupWrapper = styled(PopupWrapper)<SubPopupProps>`
+const AddPopupWrapper = styled(PopupWrapper)<AddPopupProps>`
   min-width: 350px;
   max-width: 350px;
   position: absolute;
-  top: 45px;
+  top: ${({ isSlash }) => (isSlash ? 0 : 45)}px;
   left: ${({ $left }) => $left}px;
   background-color: ${BackgroudColor};
   z-index: 2;
