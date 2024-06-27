@@ -38,7 +38,7 @@ export default function EditPopup({ contentTagRef }: { contentTagRef: MutableRef
     if (key !== 'delete') return;
     if (!contentTagRef.current) return;
 
-    contentTagRef.current.innerHTML = '';
+    contentTagRef.current.textContent = '';
     const event = new KeyboardEvent('keyup', {
       key: 'Backspace',
       bubbles: true,
