@@ -6,7 +6,8 @@ interface ArticleRequestProps {
 }
 
 interface UpdateArticleProps extends ArticleRequestProps {
-  blocks: Block[];
+  blocks?: Block[];
+  title?: string;
 }
 
 const SERVER = import.meta.env.VITE_SERVER;
@@ -42,7 +43,8 @@ export const postNewArticle = async ({ teamspaceId = '' }: { teamspaceId: string
 export const updateArticleRequestById = async ({
   teamspaceId = '',
   articleId = '',
-  blocks = [],
+  blocks: content,
+  title,
 }: UpdateArticleProps) => {
   try {
     const response = await fetch(`${SERVER}${TEAMSPACE_PATH}/${teamspaceId}${ARTICLE_PATH}/${articleId}`, {
@@ -50,7 +52,7 @@ export const updateArticleRequestById = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ content: blocks }),
+      body: JSON.stringify({ title, content }),
     });
 
     if (!response.ok) throw new Error(UNKNOWN_ERROR_MESSAGE);

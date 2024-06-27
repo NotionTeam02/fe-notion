@@ -181,7 +181,10 @@ articleRouter.patch('/:articleId', async (req: Request, res: Response) => {
     await teamspace.save();
 
     const io = (req as unknown as CustomRequest).io;
-    if (io) io.emit(`article-${article._id}`, article);
+    if (io) {
+      io.emit(`article-${article._id}`, article);
+      io.emit(`teamspace-${teamspaceId}`);
+    }
 
     res.json(article);
   } catch (error) {

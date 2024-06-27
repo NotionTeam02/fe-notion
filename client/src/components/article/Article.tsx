@@ -2,7 +2,11 @@ import styled from 'styled-components';
 import BlockController from './BlockController';
 import useArticle from '../../hooks/useArticle';
 import { Flex } from '../../styles/themes';
-import React, { useState } from 'react';
+import React, { KeyboardEvent, useCallback, useState } from 'react';
+import { debounce } from '@/utils/timeoutUtils';
+import { useUpdateArticleMutation } from '@/hooks/mutationHooks';
+import { useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface DraggingBoxProps {
   $top: number;
@@ -12,10 +16,19 @@ interface DraggingBoxProps {
 }
 
 export default function Article() {
+  const client = useQueryClient();
+  const { teamspaceId, articleId } = useParams();
   const { title = '', clientBlocksRef, blocks, setBlocks, debouncedFetch } = useArticle();
   const [isDragging, setIsDragging] = useState(false);
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
+
+  const successFn = () =>
+    client.invalidateQueries({
+      queryKey: ['teamspace', `${teamspaceId}`],
+    });
+
+  const { updateArticle } = useUpdateArticleMutation({ successFn });
 
   const handleMouseDown = ({ clientX, clientY }: React.MouseEvent) => {
     setIsDragging(true);
@@ -29,10 +42,23 @@ export default function Article() {
 
   const handleMouseUp = () => setIsDragging(false);
 
+  const debounceTitleFetch = useCallback(
+    debounce((title: string) => {
+      updateArticle({ teamspaceId, articleId, title });
+    }, 1000),
+    [teamspaceId, articleId]
+  );
+
+  const handleTitleChange = ({ currentTarget: { textContent } }: KeyboardEvent<HTMLElement>) => {
+    debounceTitleFetch(textContent);
+  };
+
   return (
     <Wrapper onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <ContentBox>
-        <Title>{title}</Title>
+        <Title contentEditable onKeyUp={(e) => handleTitleChange(e)}>
+          {title}
+        </Title>
         <BlockController
           clientBlockRef={clientBlocksRef}
           blocks={blocks}

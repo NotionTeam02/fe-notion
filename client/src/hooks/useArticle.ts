@@ -26,7 +26,9 @@ export default function useArticle() {
     refetchOnWindowFocus: false,
   });
 
-  const { updateArticle } = useUpdateArticleMutation();
+  const successFn = () => {};
+
+  const { updateArticle } = useUpdateArticleMutation({ successFn });
 
   useEffect(() => {
     const socket = io(SERVER);
