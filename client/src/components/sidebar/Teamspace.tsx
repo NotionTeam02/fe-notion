@@ -3,6 +3,7 @@ import { RowGap, SideMenu } from '../../styles/themes';
 import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteArticleMutation, useNewArticleMutation } from '@/hooks/mutationHooks';
 import { useNavigate } from 'react-router-dom';
+import { CopyFilled, DatabaseFilled } from '@ant-design/icons';
 
 interface ArticleDescription {
   _id: string;
@@ -27,7 +28,7 @@ export default function Teamspace({ _id: teamspaceId, title, articles }: Teamspa
     <>
       <SideMenu>
         <RowGap>
-          <IconImage src={''} />
+          <DatabaseFilled />
           <span>{title}</span>
         </RowGap>
         <button onClick={() => fetchNewArticle({ teamspaceId })}>+</button>
@@ -38,7 +39,7 @@ export default function Teamspace({ _id: teamspaceId, title, articles }: Teamspa
           onClick={() => navigate(`/teamspace/${teamspaceId}/article/${articleId}`)}
         >
           <RowGap>
-            <IconImage src={icon} />
+            <CopyFilled />
             <span>{articleTitle}</span>
           </RowGap>
           <button onClick={() => deleteArticle({ teamspaceId, articleId })}>x</button>
