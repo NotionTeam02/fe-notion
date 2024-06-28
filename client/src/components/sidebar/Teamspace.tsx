@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { RowGap, SideMenu } from '../../styles/themes';
 import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteArticleMutation, useNewArticleMutation } from '@/hooks/mutationHooks';
@@ -33,7 +32,7 @@ export default function Teamspace({ _id: teamspaceId, title, articles }: Teamspa
         </RowGap>
         <button onClick={() => fetchNewArticle({ teamspaceId })}>+</button>
       </SideMenu>
-      {articles.map(({ _id: articleId, title: articleTitle, icon }, index) => (
+      {articles.map(({ _id: articleId, title: articleTitle }, index) => (
         <SideMenu
           key={`sidemenu-article-${index}`}
           onClick={() => navigate(`/teamspace/${teamspaceId}/article/${articleId}`)}
@@ -48,7 +47,3 @@ export default function Teamspace({ _id: teamspaceId, title, articles }: Teamspa
     </>
   );
 }
-
-const IconImage = styled.img`
-  margin-left: 24px;
-`;
