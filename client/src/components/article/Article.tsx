@@ -111,8 +111,8 @@ const DraggingBox = styled.div<DraggingBoxProps>`
     height: ${height}px;
   `}
 
-  border: 2px solid rgba(132, 198, 255, 0.3);
-  background-color: rgba(132, 198, 255, 0.3);
+  border: 2px solid rgba(255, 180, 215, 0.3);
+  background-color: rgba(255, 180, 215, 0.3);
   pointer-events: none;
   z-index: 1000;
 `;

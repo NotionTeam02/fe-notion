@@ -230,4 +230,13 @@ export const StyledBlockTag = styled.div`
   padding: 3px 10px;
   white-space: pre-wrap;
   word-break: break-word;
+  caret-color: rgb(255, 180, 215);
+
+  &:focus {
+    outline: 1px solid rgba(255, 180, 215);
+    border-radius: 4px;
+  }
+  &::selection {
+    background: rgba(255, 180, 215);
+  }
 `;
