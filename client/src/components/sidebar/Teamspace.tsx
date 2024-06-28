@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { RowGap, SideMenu } from '../../styles/themes';
 import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteArticleMutation, useNewArticleMutation } from '@/hooks/mutationHooks';
