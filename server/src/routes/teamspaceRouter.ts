@@ -155,7 +155,7 @@ const teamspaceRouter = (io: Server): Router => {
 
       const updatedTeamspace = await Teamspace.findOneAndUpdate(
         {
-          id: teamspaceIdNumber,
+          _id: teamspaceIdNumber,
         },
         {
           title,
